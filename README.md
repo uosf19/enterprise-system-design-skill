@@ -81,7 +81,7 @@ enterprise-system-design/
 
 ---
 
-## 🚀 How to Install & Use in Antigravity or AI Agent Workspaces
+## How to Install & Use in Antigravity or AI Agent Workspaces
 
 ### Option A: Install as a Global Antigravity Skill
 Clone or copy this repository into your global or project skills directory:

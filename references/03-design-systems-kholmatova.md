@@ -44,7 +44,7 @@ Kholmatova stresses that design principles must be **opinionated and actionable*
 
 ---
 
-## 4. Architectural Rules Extracted for our Master Skill
+## 4. Architectural Rules for This Skill
 1. **The Semantic Naming Invariant:** Never name a token, component, or state based on its visual representation. Always name it according to its semantic business purpose.
 2. **Dual-Tier Governance:** Enforce strict compilation rules on core transactional modules (POS, Billing, Tax) while allowing flexible layout composition on reporting surfaces.
 3. **Living Documentation Integration:** A pattern is only considered "Production-Ready" when its code, design tokens, and domain rules are documented together in a single accessible registry.

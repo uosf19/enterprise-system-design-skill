@@ -20,11 +20,11 @@ Good architectural and system design is not about imposing rigid, top-down bluep
 
 ### B. Hospitality Patterns Translated into ERP Architecture
 
-| Physical Architectural Pattern | Physical Reality in Restaurant / Retail | Digital Software Counterpart in our ERP |
+| Physical Architectural Pattern | Physical Reality in Restaurant / Retail | Digital Software Counterpart in the Reference Architecture |
 | :--- | :--- | :--- |
 | **Pattern: The Counter (شباك الكاشير)** | Rapid linear progression: customer approaches, orders, pays, receives receipt, steps aside. | **Linear Fast-Checkout POS Flow:** Minimal screen transitions, numpad on right edge, one-tap cash settlement, auto-opening cash drawer. |
 | **Pattern: The Kitchen Pass (نقطة تسليم المطبخ)** | The physical boundary where kitchen staff hand completed plates to dining room servers. | **KDS Expo Station (محطة الشيف العمومي):** Combines multi-station tickets (Grill + Salad + Fryer) into one consolidated pickup view before marking "Served". |
-| **Pattern: Intimacy Gradient (تدرج الخصوصية)** | Gradual transition from public street to semi-private dining room to private back-office. | **Role-Based Spatial UI Access:** POS for floor staff $\rightarrow$ Shift Summary for Manager $\rightarrow$ Payroll/Ledgers strictly in private Admin Web. |
+| **Pattern: Intimacy Gradient (تدرج الخصوصية)** | Gradual transition from public street to semi-private dining room to private back-office. | **Role-Based Spatial UI Access:** POS for floor staff → Shift Summary for Manager → Payroll/Ledgers strictly in private Admin Web. |
 | **Pattern: Territories & Seating** | Physical layout of tables, booths, bar stools, and server stations. | **Visual Floor Plan Management:** Interactive floor canvas with real-time table statuses (Green = Free, Yellow = Ordered, Red = Billed, Blue = Dirty). |
 
 ---
@@ -34,7 +34,7 @@ Alexander argued that great systems possess an intrinsic quality: they feel "ali
 
 ---
 
-## 4. Architectural Rules Extracted for our Master Skill
+## 4. Architectural Rules for This Skill
 1. **Physical Spatial Alignment:** Digital workflows must directly mimic the physical flow of goods, humans, and tickets in the brick-and-mortar space.
 2. **The Progressive Disclosure Rule:** Expose interface elements in alignment with operational urgency. Do not crowd high-speed operational screens with back-office configuration details.
 3. **Ergonomic Context Fitting:** Design every interface considering the user's physical environment (noise, light, posture, hand availability, and viewing distance).

@@ -44,13 +44,13 @@ sequenceDiagram
 
 ### D. Idempotency & Conflict Resolution in Hybrid Offline Sync
 * **Idempotency Keys:** Every mutation originating on an edge device (POS) must carry a unique, client-generated UUID idempotency key:
-  $$\text{Key} = (\text{organization\_id}, \text{device\_id}, \text{operation\_id})$$
+  `Key = (organization_id, device_id, operation_id)`
   Replaying the exact same request must return the identical outcome without creating duplicate payments or inventory deductions.
 * **Semantic Conflict Resolution:** Generic Last-Write-Wins (LWW) causes silent data loss. Financial and inventory records must be **append-only ledgers**, where conflicts are resolved by explicit reversal or human review queues, never blind overwrites.
 
 ---
 
-## 3. Architectural Rules Extracted for our Master Skill
+## 3. Architectural Rules for This Skill
 1. **The Transactional Outbox Invariant:** Any domain state change that triggers downstream side effects (inventory, notifications, accounting) must be committed atomically with an outbox record in the same database transaction.
 2. **Deterministic Idempotency Rule:** All write APIs and sync endpoints must enforce idempotent request handling backed by unique compound database constraints.
 3. **Monotonic Event Sequencing:** Offline mutation queues must rely on monotonic client-side sequence counters combined with logical server cursors, never physical device wall-clocks.

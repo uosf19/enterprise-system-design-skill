@@ -59,7 +59,7 @@ class SalesOrder {
 
 ---
 
-## 4. Architectural Rules Extracted for our Master Skill
+## 4. Architectural Rules for This Skill
 1. **The Aggregate Boundary Invariant:** A database transaction should ideally modify only one Aggregate instance at a time. Modifications to other aggregates should be handled via Domain Events and asynchronous Outbox processing.
 2. **Value Object Primacy for Money & Quantity:** Never represent monetary values or physical quantities as raw numbers (`number` or `float`). Always encapsulate them in strongly typed Value Objects with explicit currency and unit of measure.
 3. **The Anti-Corruption Gate (ACL):** External vendor payloads (ETA receipts, payment webhooks, biometric clocks) must be sanitized and converted through an Anti-Corruption Layer before entering the domain core.

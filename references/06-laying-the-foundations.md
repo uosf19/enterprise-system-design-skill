@@ -38,7 +38,7 @@ Building a design system without solid digital foundations is like building a sk
 
 ---
 
-## 4. Architectural Rules Extracted for our Master Skill
+## 4. Architectural Rules for This Skill
 1. **The Mathematical Grid Invariant:** All layout and component measurements must adhere strictly to the 4px/8px modular scale. No hardcoded or arbitrary margins/paddings are allowed.
 2. **Bilingual Typography Rhythm:** Arabic and Latin typefaces must share identical vertical metrics and optical baselines to prevent layout jitter when switching languages.
 3. **Automated Audit Gates:** Linters in CI must reject any CSS/Dart code that introduces hardcoded hex color codes or untokenized spacing.

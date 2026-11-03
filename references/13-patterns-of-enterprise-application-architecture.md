@@ -21,7 +21,7 @@ Enterprise software is fundamentally about handling complex, persistent business
 ### B. Accounting & Ledger Patterns
 * **Posting Rules & The Double-Entry Ledger:**
   - Every financial transaction generates balanced journal entries:
-    $$\sum \text{Debits} = \sum \text{Credits}$$
+    Σ Debits = Σ Credits
   - Direct database updates (`UPDATE accounts SET balance = balance + 50`) are strictly forbidden in accounting.
   - Every state change is an immutable journal line linking to a concrete source document (Sale, Refund, Purchase Receipt, Payroll Run).
 
@@ -41,7 +41,7 @@ Enterprise software is fundamentally about handling complex, persistent business
 
 ---
 
-## 3. Architectural Rules Extracted for our Master Skill
+## 3. Architectural Rules for This Skill
 1. **The Integer Money Invariant:** All currency and monetary calculations must be executed and stored in integer minor units with an explicit ISO currency attribute.
-2. **The Double-Entry Invariance Rule:** Every posted journal entry must validate balance ($\Delta = 0$) inside the database transaction before commitment.
+2. **The Double-Entry Invariance Rule:** Every posted journal entry must validate balance (Δ = 0) inside the database transaction before commitment.
 3. **Optimistic Versioning Rule:** All mutable operational aggregates must maintain a monotonic `revision` number to enforce optimistic concurrency control during concurrent updates and offline synchronization.

@@ -33,7 +33,7 @@ While traditional design systems excel at enforcing consistency, they often push
 
 ---
 
-## 3. Architectural Rules Extracted for our Master Skill
+## 3. Architectural Rules for This Skill
 1. **The Contextual Density Invariant:** Every component in the system must support explicit density modes (e.g., `compact`, `comfortable`, `spacious`) driven by context, never hardcoded.
 2. **The Environmental Legibility Standard:** High-stress interfaces (POS, KDS) must prioritize glanceability and high contrast over aesthetic subtlety.
 3. **The Edge Exemption Rule:** Platform-specific native capabilities (e.g., native biometric prompts or hardware printer status) may deviate from generic web conventions to honor native ergonomics.

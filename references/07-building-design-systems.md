@@ -32,7 +32,7 @@ To sustain a design system, you must measure and report its impact:
 
 ---
 
-## 3. Architectural Rules Extracted for our Master Skill
+## 3. Architectural Rules for This Skill
 1. **Self-Documenting Component APIs:** Every UI component must expose fully typed props with explicit TypeScript/Dart interfaces and fallback defaults.
 2. **Automated Visual CI Gates:** Pull requests modifying shared UI components must pass automated visual regression snapshots across desktop, tablet, and mobile viewport sizes.
-3. **The State Completeness Invariant:** Every interactive component must explicitly handle and display all 5 states: `Default`, `Hover/Focus`, `Active/Pressed`, `Loading`, and `Disabled`.
+3. **The State Completeness Invariant:** Every interactive component must explicitly handle and display all six states: `Default`, `Hover`, `Focus-visible`, `Active/Pressed`, `Loading`, and `Disabled`.

@@ -43,7 +43,7 @@ A structured 5-stage progression to ensure stability in production applications:
 
 ---
 
-## 4. Architectural Rules Extracted for our Master Skill
+## 4. Architectural Rules for This Skill
 1. **The Platform-Agnostic Token Contract:** Tokens must always be authored in platform-agnostic formats (JSON/YAML) and automatically compiled into target language assets via CI/CD.
 2. **The Deprecation Notice Rule:** No component or token may be abruptly removed from the codebase. It must undergo a formal deprecation period with a documented migration path.
 3. **SemVer UI Packaging:** All shared UI packages in the monorepo must strictly adhere to Semantic Versioning to prevent unintentional breaks across client applications.

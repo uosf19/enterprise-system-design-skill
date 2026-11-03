@@ -42,7 +42,7 @@ Web Standards Asset Pipeline Cross-Browser  API Contracts
 
 ---
 
-## 3. Architectural Rules Extracted for our Master Skill
+## 3. Architectural Rules for This Skill
 1. **The Logical Properties Rule:** All CSS layout rules must be authored using CSS Logical Properties (`inline`/`block`) to guarantee effortless bidirectional (RTL/LTR) support.
 2. **The Budgeted Performance Gate:** Production builds must enforce hard performance budgets (e.g., maximum initial bundle size and sub-150ms render latency for transactional screens).
 3. **Decoupled Presentational Layer:** Presentational UI components in `packages/ui` must never contain direct API calls, WebSocket clients, or database drivers. They accept props and emit events.

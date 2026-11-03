@@ -19,11 +19,11 @@ Enterprise software never lives in a vacuum. It must communicate with external t
            |
 [ Message Dispatcher / Router ]
            |
-   +-------+-------+
-   |               |
-[ ETA Adapter ]  [ Payment Adapter ]  [ WhatsApp Adapter ]
-(Translator)     (Translator)         (Translator)
-   |               |                    |
+   +-------+-------+-------+
+   |               |       |
+[ ETA Adapter ] [ Payment Adapter ] [ WhatsApp Adapter ]
+(Translator)    (Translator)        (Translator)
+   |               |                  |
 [ External ETA ] [ External Gateway ] [ Meta Cloud API ]
 ```
 
@@ -40,7 +40,7 @@ Enterprise software never lives in a vacuum. It must communicate with external t
 
 ---
 
-## 3. Architectural Rules Extracted for our Master Skill
+## 3. Architectural Rules for This Skill
 1. **The Idempotent Consumer Invariant:** Every event handler and webhook endpoint must check and store the external message/event ID before executing any business logic.
 2. **The Dead-Letter Quarantine Rule:** Any message failing processing after a configured retry threshold must be isolated into a Dead Letter Queue with diagnostic metadata, never dropped silently.
 3. **Canonical Event Decoupling:** Internal domain events must remain completely decoupled from external third-party schemas. Translators/Adapters must be isolated at the system edge.

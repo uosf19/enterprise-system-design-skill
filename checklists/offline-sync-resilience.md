@@ -23,5 +23,14 @@ Use this checklist when building or reviewing edge nodes, local-first desktop ap
 ## 3. Conflict & Failure Management
 - [ ] **Non-Blocking Rejections:** If an operation in a batch fails validation, are independent operations allowed to continue while only dependent operations are blocked?
 - [ ] **Audited Operator Exceptions:** Are rejected transactions surfaced to a visible manager review queue with explicit remediation commands (`void_local_sale`, `reprice_and_resubmit`)?
-- [ ] **Exponential Backoff with Jitter:** Does the sync client use randomized exponential backoff ($2^n + \text{random\_jitter}$) to prevent thunderous herd reconnect storms?
-- [ ] **Fiscal Window Escalation:** If offline duration approaches the regulatory fiscal window (e.g., ETA 24-hour e-receipt limit), does the POS display escalating visual warnings and trigger late-submission workflows?
+- [ ] **Exponential Backoff with Jitter:** Does the sync client use randomized, capped exponential backoff (`min(max_backoff, 2^n + jitter)`) to prevent thundering-herd reconnect storms?
+- [ ] **Fiscal Window Escalation:** If offline duration approaches the regulatory fiscal window (e.g., ETA e-receipt submission deadline), does the POS display escalating visual warnings and trigger late-submission workflows? Verify the current deadline per jurisdiction/document type and make it configurable.
+
+---
+
+## 4. Schema, Deletion & Observability
+- [ ] **Schema Versioning:** Is the local SQLite schema versioned with explicit forward/backward migration rules?
+- [ ] **Tombstones:** Are deletes represented as durable tombstones (or an equivalent deletion log) so they sync reliably?
+- [ ] **Sync Telemetry:** Are sync lag, retry counts, conflict rates, and DLQ depth observable per tenant and device?
+- [ ] **Lease Lifecycle:** Are authority leases time-bound, revocable, and auditable, with defined behavior on expiry?
+- [ ] **Upgrade Path:** Can an old client safely sync after a server-side schema or protocol change, or is it forced to upgrade?

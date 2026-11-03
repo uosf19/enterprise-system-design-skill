@@ -19,7 +19,7 @@ A system is not just a collection of separate parts; it is an interconnected set
   - **Inflows:** Rates that increase the stock (e.g., stock purchases, payments received, events queued).
   - **Outflows:** Rates that drain the stock (e.g., stock waste/sales, disbursements, events processed).
   - *Mathematical Invariant:* A stock can only change through its inflows and outflows:
-    $$\frac{d(\text{Stock})}{dt} = \text{Inflow}(t) - \text{Outflow}(t)$$
+    d(Stock)/dt = Inflow(t) − Outflow(t)
 
 ### B. Feedback Loops (حلقات التغذية الراجعة)
 * **Balancing Loops (حلقات التوازن):** Goal-seeking mechanisms that stabilize the system and resist change (e.g., cash drawer reconciliation, approval workflows, inventory reorder triggers).
@@ -43,19 +43,24 @@ A system is not just a collection of separate parts; it is an interconnected set
 ---
 
 ## 4. Leverage Points (Places to Intervene in a Software System)
-Meadows identifies 12 leverage points (from least to most effective):
-1. **Numbers/Constants (Least Effective):** Tweaking timeouts or retry numbers.
-2. **Buffers:** Adjusting queue sizes and local storage caches (SQLite buffer capacity).
-3. **Structure of Networks:** Client-Server vs. Edge/Local-First topology.
-4. **Delays:** Shortening the time between sync events or fiscal reporting windows.
-5. **Balancing Loops:** Enforcing maker-checker approval workflows.
-6. **Information Flows:** Making system state transparent (e.g., clear offline age badges on the POS screen).
-7. **The Rules (High Leverage):** The Domain Invariants (e.g., "Ledgers are append-only; balances cannot be edited directly").
-8. **The Paradigm (Most Effective):** Shifting the team mindset from "A database with CRUD screens" to "A distributed state machine of business facts."
+Meadows identifies 12 leverage points. The list below is ordered from least to most effective (Meadows numbers them 12 down to 1):
+
+1. **Numbers/constants (least effective):** Tweaking timeouts, retry counts, or rate limits.
+2. **Buffers:** Adjusting queue sizes, cache capacity, or local SQLite storage.
+3. **Stock-and-flow structures:** Choosing client-server vs. edge/local-first topology.
+4. **Delays:** Shortening sync intervals or fiscal reporting windows.
+5. **Balancing feedback loops:** Enforcing maker-checker approvals and reconciliation.
+6. **Reinforcing feedback loops:** Dampening retry storms and runaway queues.
+7. **Information flows:** Making state transparent (offline age badges, sync status).
+8. **Rules:** Domain invariants such as append-only ledgers and immutable audits.
+9. **Self-organization:** Letting teams evolve components and patterns safely.
+10. **Goals:** Aligning architecture with business outcomes such as accuracy, speed, and compliance.
+11. **Paradigms:** Shifting from "CRUD screens over a database" to "a distributed state machine of business facts."
+12. **Transcending paradigms (most effective):** Remaining able to choose a different model when the current one stops fitting.
 
 ---
 
-## 5. Architectural Rules Extracted for our Master Skill
+## 5. Architectural Rules for This Skill
 1. **The Stock Invariance Principle:** Never store or modify a running balance as an authoritative primary truth. Balances are derived projections of historical flows.
 2. **The Delay Cushion Principle:** Every offline or asynchronous boundary must incorporate a deliberate buffer capacity and bounded delay model before triggering alerts.
 3. **The Anti-Oscillation Rule:** All retry mechanisms on distributed nodes must use exponential backoff with randomized jitter to prevent reinforcing failure loops.

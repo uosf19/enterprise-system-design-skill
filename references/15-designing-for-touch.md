@@ -11,27 +11,31 @@ Touchscreens are not just "monitors without mice." Designing for touch requires 
 ---
 
 ## 2. Core Ergonomic Frameworks & Guidelines
+*Source note: Clark's book provides the ergonomic case for touch-first design. The numeric target sizes, spacing, and timing thresholds below combine platform guidance (Apple HIG, Material) with this skill's heuristics; they are not all claims from the book.*
 
-### A. Touch Target Sizes: 44pt Minimum, 48px Baseline (أبعاد لمس الإصبع)
-* The human index finger pad is roughly 10mm × 10mm, while the thumb pad is 12mm × 12mm.
-* **The Baseline:** Interactive touch elements (e.g., POS menu buttons, payment buttons, numpad keys) should be at least **48px × 48px** (48dp on Android; the iOS HIG minimum is 44pt), with at least 8px separation between adjacent touchable elements. Validate the physical size on target hardware; CSS px is not a fixed physical unit.
+### A. Touch Target Sizes: Platform Baselines and Ergonomic Validation
+* **Platform baselines:** Apple's Human Interface Guidelines recommend a **44×44 pt** hit region; Material Design recommends **48×48 dp**. These are starting points, not universal physical measurements.
+* **Ergonomic validation:** Finger pads are roughly 10–12 mm across. Validate target size on the actual hardware, viewing distance, and user population; CSS px is not a fixed physical unit.
+* *Derived for this skill:* use at least **48×48 CSS px** for POS/KDS touch controls where practical, with at least **8 px** separation between adjacent targets. Material recommends 8dp or more; 8px is the web adaptation used here. Document exceptions for dense desktop or hardware controls.
 * *Tiny icons and dense desktop links cause mis-taps that slow down checkout queues.*
 
-### B. The Thumb Zone & Grip Ergonomics
-* **On Mobile (Manager App):**
-  - The bottom third of the screen is the **Natural Zone** (easily reachable by the thumb).
-  - The top corners are the **Ouch / Hard-to-Reach Zone**.
-  - *Rule:* Primary actions (e.g., "Approve Attendance", "Confirm Stock Count") belong in the bottom thumb zone. Destructive actions belong in the hard-to-reach zone to prevent accidental triggers.
+### B. Thumb Reach & Grip Ergonomics
+* **Mobile (Manager App):**
+  - The **natural / stretch / ouch** thumb-zone vocabulary is widely used in mobile design and was popularized by Scott Hurff; Clark's book discusses grip and reach more broadly. Treat the zones as a heuristic:
+    - Bottom third: easy reach.
+    - Middle: stretch.
+    - Top corners: hard to reach.
+  - *Rule:* Place frequent primary actions (e.g., "Approve Attendance", "Confirm Stock Count") in easy-reach zones. Destructive actions require explicit confirmation and should not sit next to frequent actions; "hard to reach" alone is not a safety mechanism.
 * **On Desktop / POS Terminals:**
   - Cashiers stand or lean over flat or tilted screens. The primary action area is the bottom-right quadrant (for right-handed cashiers) or central-bottom.
 
 ### C. Haptic & Visual Confirmation
 * In noisy environments (coffee shops with espresso machines, noisy kitchens), auditory feedback is often lost.
-* **The Rule:** Every touch interaction must provide **instantaneous visual depression / state change** (target <50ms; never exceed 100ms) so the cashier knows the tap registered without double-tapping.
+* *Derived heuristic for this skill:* every touch interaction should provide **immediate visual depression / state change**, targeting **<50 ms** and never exceeding **100 ms**, so the cashier knows the tap registered without double-tapping. Validate the actual budget on the target device.
 
 ---
 
 ## 3. Architectural Rules for This Skill
-1. **The Minimum Hit-Target Invariant:** All interactive elements on POS, KDS, and Mobile surfaces must meet or exceed the 48px × 48px baseline (48dp Android; 44pt iOS minimum), validated on target hardware.
-2. **The 8px Touch Margin Rule:** Adjacent touchable targets must maintain a minimum physical buffer of 8px to prevent accidental mis-taps during rush hours.
-3. **Ergonomic Action Placement:** Critical operational triggers must reside in natural reach zones, while destructive operations must be placed in secondary confirmation zones.
+1. **The Platform Hit-Target Baseline:** All interactive elements on POS, KDS, and mobile surfaces must meet the platform baseline (44pt iOS / 48dp Android) and, for POS/KDS, at least 48×48 CSS px where practical; validate on target hardware.
+2. **The Touch Separation Rule:** Adjacent touchable targets should maintain at least 8px separation (adapting Material's 8dp guidance) to reduce accidental mis-taps during rush hours; validate on the target device.
+3. **Ergonomic Action Placement:** Frequent operational triggers should reside in easy-reach zones. Destructive operations require explicit confirmation and must not sit next to frequent actions.

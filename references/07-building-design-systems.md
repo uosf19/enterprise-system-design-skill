@@ -6,13 +6,15 @@
 ---
 
 ## 1. Executive Summary & Core Thesis
-Drawing from their real-world experience building the GitLab enterprise design system (Pajamas), Vesselov and Davis bridge the cultural and technical gap between product design and engineering. A design system must be treated as an internal product with measurable business return: decreasing delivery cycle times, reducing visual/technical debt, and democratizing cross-team contributions.
+Drawing on their experience at GitLab, where they helped establish the company's design system, Vesselov and Davis bridge the cultural and technical gap between product design and engineering. A design system must be treated as an internal product with measurable business return: decreasing delivery cycle times, reducing visual/technical debt, and democratizing cross-team contributions.
 
 ---
 
 ## 2. Key Frameworks & Methodologies
+*Source note: the book's chapters cover the rise of design systems, introducing them, selling the system, design as a language, implementation, measuring and maintaining, a GitLab case study, and design systems as a resource. The ROI scorecard and federated contribution workflow below are derived for this skill.*
 
 ### A. The Business Case & ROI Metrics
+*Derived metrics for this skill:*
 To sustain a design system, you must measure and report its impact:
 * **Velocity Metric:** Time required to deliver a new enterprise feature (e.g., measuring cycle time before vs. after standardized component adoption).
 * **Defect Metric:** Reduction in UI-related customer bug reports and accessibility tickets.
@@ -35,4 +37,4 @@ To sustain a design system, you must measure and report its impact:
 ## 3. Architectural Rules for This Skill
 1. **Self-Documenting Component APIs:** Every UI component must expose fully typed props with explicit TypeScript/Dart interfaces and fallback defaults.
 2. **Automated Visual CI Gates:** Pull requests modifying shared UI components must pass automated visual regression snapshots across desktop, tablet, and mobile viewport sizes.
-3. **The State Completeness Invariant:** Every interactive component must explicitly handle and display all six states: `Default`, `Hover`, `Focus-visible`, `Active/Pressed`, `Loading`, and `Disabled`.
+3. **The State Completeness Rule (derived):** Every interactive component must explicitly handle `Default`, `Focus-visible`, `Active/Pressed`, `Loading`, and `Disabled`; `Hover` only where a pointer exists (it has no meaning on touch-only POS, KDS, or mobile surfaces); and `Error` and `Empty` wherever the component can fail or have no data (payment forms, lists, sync status).

@@ -19,17 +19,20 @@ A design system is a living product that bridges the divide between design and e
   1. **Global Tokens:** Primitive values (`color.blue.500: #0066cc`).
   2. **Alias / Semantic Tokens:** Contextual decisions (`color.surface.interactive: {color.blue.500}`).
   3. **Component Tokens:** Specific component overrides (`button.primary.background: {color.surface.interactive}`).
+  *Source note: the Global → Semantic → Component hierarchy and the JSON/YAML distribution pipeline are common industry implementation models, not a specific framework presented in the book. The book treats tokens as part of the shared foundation and discusses cross-platform consistency.*
 * **Distribution Pipeline:** Build tools transform the centralized token file into:
   - CSS / SCSS variables (for Web & Desktop).
   - TypeScript types (for type-safety in Next.js & NestJS).
   - Dart class constants (for Flutter Mobile).
 
-### B. The Component Lifecycle (دورة حياة المكون)
-A structured 5-stage progression to ensure stability in production applications:
+### B. Component Lifecycle and the Book's Scope
+The book is organized as six chapters plus an appendix: introducing design systems, designing the system, building it, putting it into practice, expanding it, and the future of design systems. It does **not** prescribe a single five-stage component lifecycle.
+
+*Derived for this skill:* the following lifecycle is a production-governance model, not a framework from the book:
 1. **Proposal (اقتراح):** Identifying a recurring pattern that needs standardization.
 2. **Alpha / Experimental:** Built in an isolated branch or experimental package; subject to breaking changes.
 3. **Beta:** Integrated into non-critical pilot flows for field-testing.
-4. **Stable:** Certified, fully documented in Storybook, with 100% test coverage and visual regression checks.
+4. **Stable:** Certified, fully documented in Storybook, with the agreed test and visual-regression coverage.
 5. **Deprecated:** Marked for removal; emits build warnings and provides an explicit migration path to the new component before deletion.
 
 ---
@@ -40,6 +43,7 @@ A structured 5-stage progression to ensure stability in production applications:
   - **PATCH:** Bug fixes, token adjustments, minor styling tweaks without prop changes.
   - **MINOR:** Adding new components, new optional props, or backward-compatible features.
   - **MAJOR:** Breaking changes, renamed props, removed components, or fundamental layout re-architectures.
+  *Source note: SemVer is an external standard; applying it to shared UI packages is this skill's recommendation, not a specific book mandate.*
 
 ---
 

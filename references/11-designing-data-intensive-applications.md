@@ -15,13 +15,15 @@ Software systems fail not because hardware is broken, but because software engin
 ### A. Reliability, Scalability, Maintainability (RSM)
 * **Reliability:** Tolerating hardware, software, and human faults without catastrophic system failure.
 * **Scalability:** Measuring performance under load using percentiles (p95, p99, p99.9) rather than misleading averages, and designing horizontal scaling mechanisms.
-* **Maintainability:** Prioritizing **operability** (making operations and telemetry visible) and **simplicity** (managing accidental complexity).
+* **Maintainability:** Prioritizing **operability** (making operations and telemetry visible), **simplicity** (managing accidental complexity), and **evolvability** (making future change easier).
 
-### B. Distributed Systems Realities & The Fallacies of Computing
+### B. Distributed Systems Realities & the Fallacies of Distributed Computing
+*Source note: the "Fallacies of Distributed Computing" are commonly attributed to L. Peter Deutsch and colleagues at Sun Microsystems (with an eighth added later). DDIA discusses the realities behind them; the list is not Kleppmann's.*
 * **Unreliable Networks:** Networks drop, delay, duplicate, and reorder packets. Systems must never rely on network delivery for correctness.
 * **Clock Drift:** Physical system clocks (Time-of-Day) skew and jump backwards during NTP syncs. **Never use local wall-clock timestamps for global transaction ordering.** Use monotonic clocks for durations and logical/causal sequence counters (or Lamport/vector clocks) for event ordering.
 
-### C. The Transactional Outbox Pattern & Change Data Capture (CDC)
+### C. The Dual-Write Problem, Outbox, and Change Data Capture (CDC)
+*Source note: DDIA analyzes dual writes and log-based integration/CDC in Chapter 11, but it does not present "Transactional Outbox" as a named DDIA pattern. The named pattern is commonly credited to Chris Richardson's microservices catalog. The outbox implementation below is added for this skill.*
 * **The Dual-Write Problem:** Updating a database table and publishing an event to a message queue in two separate steps leads to data corruption if the system crashes in between.
 * **The Outbox Solution:** The business mutation and the outbound event record are committed inside the **exact same ACID database transaction**. A separate worker process polls or tails the outbox table to publish events with at-least-once delivery guarantees.
 
@@ -43,6 +45,7 @@ sequenceDiagram
 ```
 
 ### D. Idempotency & Conflict Resolution in Hybrid Offline Sync
+*Derived for this skill: DDIA provides the underlying theory (idempotence, exactly-once vs. at-least-once delivery, and causal ordering), but the API-level idempotency-key convention and append-only ledger rules below are implementation guidance for this domain.*
 * **Idempotency Keys:** Every mutation originating on an edge device (POS) must carry a unique, client-generated UUID idempotency key:
   `Key = (organization_id, device_id, operation_id)`
   Replaying the exact same request must return the identical outcome without creating duplicate payments or inventory deductions.

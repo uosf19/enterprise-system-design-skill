@@ -8,7 +8,7 @@ Use this checklist prior to approving any module design, pull request, or archit
 - [ ] **Ubiquitous Language:** Are all class names, method names, and database column names using domain terms rather than generic technical terms (e.g., `ticket.bump()` vs `updateTicketStatus(2)`)?
 - [ ] **Aggregate Isolation:** Does each command handler or transaction ideally modify only a single Aggregate Root, with cross-aggregate changes coordinated via domain events?
 - [ ] **Value Object Immutability:** Are money, units of measure, coordinates, and date ranges modeled as immutable Value Objects?
-- [ ] **Zero Float Policy:** Is all monetary math executed in integer minor units with an ISO 4217 currency code and minor-unit scale? Is the rounding policy documented and tested?
+- [ ] **Zero Float Policy:** Is all monetary math executed in integer minor units with an ISO 4217 currency code (scale derived from the currency)? Is the rounding policy documented and tested, with allocation for splits?
 - [ ] **Append-Only Auditing:** Are state changes that affect money, stock, permissions, or fiscal receipts append-only with explicit reversal records?
 
 ---
@@ -60,3 +60,14 @@ Use this checklist prior to approving any module design, pull request, or archit
 - [ ] **Replay & Reconciliation:** Is there a documented DLQ replay and reconciliation procedure?
 - [ ] **Graceful Degradation:** Does the system degrade predictably when dependencies are unavailable?
 - [ ] **DR Drills:** Are disaster-recovery drills performed and reviewed?
+
+---
+
+## 8. ERP Core Concerns (review prompts; add detail per project)
+- [ ] **Period Close:** Are fiscal periods closable and lockable, with corrections posted as new entries in an open period?
+- [ ] **Document Numbering:** Are invoice/receipt numbers generated per the legal rules of the jurisdiction (verify whether gaps are allowed), with a plan for offline issuance?
+- [ ] **Inventory Costing:** Is the costing method (FIFO, weighted average, other) chosen, documented, and tested?
+- [ ] **Tenancy Model:** Is the isolation approach (shared schema with RLS, schema-per-tenant, database-per-tenant) chosen with its trade-offs recorded?
+- [ ] **Authorization Model:** Is access control (RBAC/ABAC, capabilities) defined centrally and tested?
+- [ ] **Reporting Separation:** Do heavy reports run on read models or replicas instead of the transactional tables?
+- [ ] **Effective-Dated Rules:** Are tax and price rules stored with effective dates, and is the applied rule snapshotted on each document?

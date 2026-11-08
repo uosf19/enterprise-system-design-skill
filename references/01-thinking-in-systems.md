@@ -37,26 +37,27 @@ A system is not just a collection of separate parts; it is an interconnected set
 | **Policy Resistance** | Multiple actors pull the system in conflicting directions to achieve their own goals. | Cashier wants 0 checkout latency; accountant wants immediate strict fiscal validation. | Local-first optimistic UI with asynchronous reconciliation ledger. |
 | **Tragedy of the Commons** | Unregulated consumption of a shared, finite resource depletes it for everyone. | Multiple clients flooding a shared Postgres database pool or Redis queue. | Rate limiting, bulk sync windows, tenant quotas, and connection pooling (PgBouncer). |
 | **Drift to Low Performance** | Allowing standards to slowly erode because historical results were degraded. | Accepting silent data inconsistencies, un-reconciled cash floats, or skipped test suites. | Strict append-only ledgers, immutable audit trails, and automated CI invariance checks. |
-| **Escalation** | Two competing forces get locked into an exponential escalation loop. | Reconnection storm: 500 disconnected POS devices spamming the cloud on reconnect. | Exponential backoff with jitter and randomized retry windows. |
+| **Escalation** | Two competing parties each respond to the other by raising their stakes. | Rarely literal in software; closest case is two services or teams repeatedly overriding each other's settings. | Agree on shared limits and an arbiter. |
+| *(Reinforcing loop, not a trap archetype)* | Failures cause retries, which cause more load and more failures. | Reconnection storm: 500 disconnected POS devices spamming the cloud on reconnect. | Full-jitter exponential backoff, server-side admission control, and load shedding. |
 | **Rule Beating** | Obeying the letter of the law while completely subverting its spirit. | Cashiers splitting orders into tiny fake amounts to bypass supervisor approval limits. | Aggregate velocity checks and anomaly detection alerts. |
 
 ---
 
 ## 4. Leverage Points (Places to Intervene in a Software System)
-Meadows identifies 12 leverage points. The list below is ordered from least to most effective (Meadows numbers them 12 down to 1):
+Meadows lists twelve leverage points, numbered from **12 (least effective)** to **1 (most effective)**. The software examples below are derived for this skill:
 
-1. **Numbers/constants (least effective):** Tweaking timeouts, retry counts, or rate limits.
-2. **Buffers:** Adjusting queue sizes, cache capacity, or local SQLite storage.
-3. **Stock-and-flow structures:** Choosing client-server vs. edge/local-first topology.
-4. **Delays:** Shortening sync intervals or fiscal reporting windows.
-5. **Balancing feedback loops:** Enforcing maker-checker approvals and reconciliation.
-6. **Reinforcing feedback loops:** Dampening retry storms and runaway queues.
-7. **Information flows:** Making state transparent (offline age badges, sync status).
-8. **Rules:** Domain invariants such as append-only ledgers and immutable audits.
-9. **Self-organization:** Letting teams evolve components and patterns safely.
-10. **Goals:** Aligning architecture with business outcomes such as accuracy, speed, and compliance.
-11. **Paradigms:** Shifting from "CRUD screens over a database" to "a distributed state machine of business facts."
-12. **Transcending paradigms (most effective):** Remaining able to choose a different model when the current one stops fitting.
+12. **Numbers/constants (least effective):** Tweaking timeouts, retry counts, or rate limits.
+11. **Buffers:** Adjusting queue sizes, cache capacity, or local SQLite storage.
+10. **Stock-and-flow structures:** Choosing client-server vs. edge/local-first topology.
+9. **Delays:** Shortening sync intervals or fiscal reporting windows.
+8. **Balancing feedback loops:** Enforcing maker-checker approvals and reconciliation.
+7. **Reinforcing feedback loops:** Dampening retry storms and runaway queues.
+6. **Information flows:** Making state transparent (offline age badges, sync status).
+5. **Rules:** Domain invariants such as append-only ledgers and immutable audits.
+4. **Self-organization:** Letting teams evolve components and patterns safely.
+3. **Goals:** Aligning architecture with business outcomes such as accuracy, speed, and compliance.
+2. **Paradigms:** Shifting from "CRUD screens over a database" to "a distributed state machine of business facts."
+1. **Transcending paradigms (most effective):** Remaining able to choose a different model when the current one stops fitting.
 
 ---
 

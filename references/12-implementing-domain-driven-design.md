@@ -11,6 +11,7 @@ Complex enterprise software projects fail when the codebase devolves into an uns
 ---
 
 ## 2. Strategic Design: Partitioning the ERP Domain
+*Source note: the "Big Ball of Mud" phrase comes from Brian Foote and Joseph Yoder's 1997 paper; Vernon uses the general idea. The outbox reference in the rules below is a cross-reference to Pillar 2, not a pattern from IDDD.*
 
 ```text
 [ Core Enterprise Monolith ]
@@ -47,11 +48,12 @@ class SalesOrder {
   private lines: OrderLine[] = [];
   private isPaid: boolean = false;
 
-  public addLine(item: CatalogItem, qty: number): void {
+  // Sales context: reference the catalog by ID and snapshot price/tax at sale time
+  public addLine(itemId: ItemId, unitPrice: Money, taxRule: TaxRuleSnapshot, qty: Quantity): void {
     if (this.isPaid) {
       throw new DomainError("Cannot modify a paid order");
     }
-    this.lines.push(new OrderLine(item, qty));
+    this.lines.push(new OrderLine(itemId, unitPrice, taxRule, qty));
     this.recalculateTotals();
   }
 }
@@ -60,6 +62,6 @@ class SalesOrder {
 ---
 
 ## 4. Architectural Rules for This Skill
-1. **The Aggregate Boundary Invariant:** A database transaction should ideally modify only one Aggregate instance at a time. Modifications to other aggregates should be handled via Domain Events and asynchronous Outbox processing.
+1. **The Aggregate Boundary Invariant:** Aggregates reference each other by identity (ID), not by object reference, and a database transaction should ideally modify only one Aggregate instance at a time. Modifications to other aggregates should be handled via Domain Events (and, where needed, the outbox implementation in Pillar 2).
 2. **Value Object Primacy for Money & Quantity:** Never represent monetary values or physical quantities as raw numbers (`number` or `float`). Always encapsulate them in strongly typed Value Objects with explicit currency and unit of measure.
 3. **The Anti-Corruption Gate (ACL):** External vendor payloads (ETA receipts, payment webhooks, biometric clocks) must be sanitized and converted through an Anti-Corruption Layer before entering the domain core.

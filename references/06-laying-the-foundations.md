@@ -10,20 +10,25 @@ Building a design system without solid digital foundations is like building a sk
 
 ---
 
-## 2. The Three-Tier Foundations Model
+## 2. The Foundations Model
+Couldwell's chapter **"Design System Model"** presents a simple model built from these elements: **foundations, design system components, design system patterns, and templates/pages**. The diagram below shows one useful way to read their relationship:
 
 ```text
-[ Brand Level ]        --> Mission, Tone of Voice, Ethical Invariants
+[ Foundations ]        --> Brand, digital foundations, accessibility, grid, type, color
       |
-[ Digital Level ]      --> Typography Scales, Spacing Grids, Accessibility, Directionality (RTL)
+[ Components ]         --> Reusable UI controls
       |
-[ Component Level ]    --> Buttons, Tables, Keypads, Modals, Forms
+[ Patterns ]           --> Recurring combinations that solve a user task
+      |
+[ Templates & Pages ]  --> Page-level compositions and real-content instances
 ```
 
-### A. Digital Foundations
-1. **The Spacing Grid (8pt / 4pt Rhythm):** Every layout, margin, padding, and component dimension must be an integer multiple of 4 or 8 pixels. Arbitrary pixel values (`13px`, `19px`) are strictly forbidden.
-2. **Typography Scale:** A defined, mathematical type ramp (e.g., Major Third or Augmented Fourth) tailored to multilingual support, with strict baseline grid alignment for Arabic (RTL) and Latin (LTR) typography.
-3. **Color Roles & Luminance:** Strictly defined contrast ratios ensuring full WCAG 2.1 AA/AAA compliance across all brand palettes.
+*Source note: the labels above follow the chapter's sequence. The 4px/8px grid, mathematical type ramp, and WCAG AA/AAA requirements below are standards adopted for this skill, not numerical rules stated by Couldwell.*
+
+### A. Digital Foundations (Derived Implementation Standards)
+1. **The Spacing Grid (4px/8px Scale):** Use the 4/8 scale for layout spacing and component dimensions. Document exceptions such as 1px borders, 2px focus rings, and optical corrections; avoid arbitrary values.
+2. **Typography Scale:** A defined type ramp (for example, Major Third or Augmented Fourth) tailored to multilingual support, with shared baseline metrics for Arabic (RTL) and Latin (LTR) typography.
+3. **Color Roles & Luminance:** Defined contrast ratios targeting WCAG 2.2 AA as the baseline (2.2 adds Target Size (Minimum), Focus Not Obscured, and Accessible Authentication), and AAA where the product or jurisdiction requires it.
 
 ### B. Interface & Code Audits (التدقيق الدوري للواجهات والكود)
 * **The Visual Inventory:** Cataloging all existing screens to expose rogue styles, duplicate buttons, and mismatched dialogs.
@@ -39,6 +44,6 @@ Building a design system without solid digital foundations is like building a sk
 ---
 
 ## 4. Architectural Rules for This Skill
-1. **The Mathematical Grid Invariant:** All layout and component measurements must adhere strictly to the 4px/8px modular scale. No hardcoded or arbitrary margins/paddings are allowed.
+1. **The Grid Discipline Rule:** Layout spacing and component dimensions should follow the 4px/8px scale. Document exceptions (borders, focus rings, optical corrections); reject arbitrary values.
 2. **Bilingual Typography Rhythm:** Arabic and Latin typefaces must share identical vertical metrics and optical baselines to prevent layout jitter when switching languages.
 3. **Automated Audit Gates:** Linters in CI must reject any CSS/Dart code that introduces hardcoded hex color codes or untokenized spacing.

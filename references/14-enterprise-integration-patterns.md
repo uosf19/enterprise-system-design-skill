@@ -11,13 +11,15 @@ Enterprise software never lives in a vacuum. It must communicate with external t
 ---
 
 ## 2. Core Integration Patterns for ERP Architecture
+*Source note: the EIP catalog contains 65 messaging patterns. The Outbox Table in the diagram is a derived bridge from Pillar 2, not an EIP pattern; the EIP patterns begin with the message channel and router.*
 
 ```text
 [ Domain Event Producer ]
            |
      (Outbox Table)
+     derived bridge, not EIP
            |
-[ Message Dispatcher / Router ]
+[ Message Channel / Router ]
            |
    +-------+-------+-------+
    |               |       |

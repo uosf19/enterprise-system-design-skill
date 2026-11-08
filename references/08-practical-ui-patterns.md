@@ -11,14 +11,16 @@ UI patterns are proven, recurring solutions to common interaction design problem
 ---
 
 ## 2. Core Methodologies & Pattern Taxonomy
+*Source note: the book's seven chapters are Introducing UI Patterns; Tap into Patterns; Deciding Which Pattern to Use and When; Patterns in Design Systems; Anti-Patterns and Dark Patterns; Mixing and Matching Patterns; and Conclusion. It does not present a named "Anatomical Evaluation" framework. The three-part evaluation below is derived for this skill.*
 
-### A. Anatomical Evaluation of a Pattern
-Before adopting or building any UI pattern, evaluate it against three pillars:
+### A. Deconstructing a Pattern: Context, Constraints, and Trade-offs
+Before adopting or building any UI pattern, evaluate it against three derived pillars:
 1. **User Mental Model:** Does this pattern match the user's natural expectations from daily life?
 2. **Technical Feasibility:** Can this pattern operate smoothly offline, on low-end hardware, and across varied network latencies?
 3. **Business Implications:** Does this pattern prevent user error, speed up transactional throughput, or increase data accuracy?
 
 ### B. High-Value Interaction Patterns for Enterprise ERP & POS
+*Derived for this skill: the book teaches pattern selection and composition; these restaurant/POS patterns are domain applications, not patterns from the book.*
 
 | Pattern | Problem Solved | Implementation in the Reference Architecture |
 | :--- | :--- | :--- |
@@ -28,6 +30,7 @@ Before adopting or building any UI pattern, evaluate it against three pillars:
 | **Exception Resolution Queue** | Reviewing biometric/WhatsApp attendance discrepancies without altering raw evidence. | Two-column audit view: Raw evidence on left, calculated timesheet on right, reason selector in center. |
 
 ### C. Identifying and Eliminating Anti-Patterns
+*The anti-pattern category is from the book; the three named labels below are this skill's shorthand.*
 * **The "Accidental Click" Anti-Pattern:** Placing irreversible actions (e.g., "Void Entire Bill" or "Refund Cash") right next to frequent actions (e.g., "Print Receipt") without a deliberate confirmation or pin-code gate.
 * **The "Silent Failure" Anti-Pattern:** Allowing an offline action to appear successful while silently dropping it from the queue without visual status indicators.
 * **The "Data Amnesia" Anti-Pattern:** Clearing a partially filled order or complex form if a minor network glitch or modal dismissal occurs.

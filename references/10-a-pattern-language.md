@@ -16,25 +16,27 @@ Good architectural and system design is not about imposing rigid, top-down bluep
 1. **The Context:** The operating environment (e.g., a noisy, high-pressure restaurant kitchen).
 2. **The Forces (التوترات المتصارعة):** Speed vs. Accuracy; Hot food cooling down vs. Waiters busy with tables.
 3. **The Solution (الحل النمطي):** The structural configuration that balances the conflicting forces.
-4. **Hierarchical Linkages:** Connecting high-level patterns (the whole restaurant flow) to mid-level patterns (the kitchen pass) to low-level patterns (ticket bump action).
+4. **Related Patterns:** Alexander links each pattern to higher- and lower-level patterns. A restaurant layout, for example, links to a Cooking Layout and to the individual work stations inside it.
 
 ### B. Hospitality Patterns Translated into ERP Architecture
+*Source note: A Pattern Language contains 253 architectural patterns. It does not prescribe software UI patterns; the mappings below are interpretive and derived for this skill.*
 
-| Physical Architectural Pattern | Physical Reality in Restaurant / Retail | Digital Software Counterpart in the Reference Architecture |
+| Alexander pattern (number) | Physical reality in restaurant / retail | Derived software counterpart |
 | :--- | :--- | :--- |
-| **Pattern: The Counter (شباك الكاشير)** | Rapid linear progression: customer approaches, orders, pays, receives receipt, steps aside. | **Linear Fast-Checkout POS Flow:** Minimal screen transitions, numpad on right edge, one-tap cash settlement, auto-opening cash drawer. |
-| **Pattern: The Kitchen Pass (نقطة تسليم المطبخ)** | The physical boundary where kitchen staff hand completed plates to dining room servers. | **KDS Expo Station (محطة الشيف العمومي):** Combines multi-station tickets (Grill + Salad + Fryer) into one consolidated pickup view before marking "Served". |
-| **Pattern: Intimacy Gradient (تدرج الخصوصية)** | Gradual transition from public street to semi-private dining room to private back-office. | **Role-Based Spatial UI Access:** POS for floor staff → Shift Summary for Manager → Payroll/Ledgers strictly in private Admin Web. |
-| **Pattern: Territories & Seating** | Physical layout of tables, booths, bar stools, and server stations. | **Visual Floor Plan Management:** Interactive floor canvas with real-time table statuses (Green = Free, Yellow = Ordered, Red = Billed, Blue = Dirty). |
+| **Street Cafe (88)** | A public place to sit, linger, and watch the world go by. | **Order and pickup status surface:** shows progress and estimated time without blocking the queue. |
+| **Food Stands (93)** | Small, individual vendors selling quick food; variety and fast service. | **Menu browsing and quick-add:** category shortcuts, modifier pickers, and combo entry optimized for speed. |
+| **Intimacy Gradient (127)** | A sequence from public street to semi-private dining room to private back office. | **Role-based spatial access:** floor staff → shift manager → payroll/ledger admin, with progressive disclosure and permission gates. |
+| **Eating Atmosphere (182)** | Shared meals need lighting, arrangement, and atmosphere that support gathering. | **Shared expo/status view:** a common screen that helps the team coordinate handoff, with status colors and grouping. |
+| **Cooking Layout (184)** | The cooking area is a workshop with enough counter space and a practical arrangement. | **KDS station layout:** group tickets by station, keep actions in reach, and avoid over-compacting the workspace. |
 
 ---
 
-## 3. "The Quality Without a Name" (QWAN) in Software
-Alexander argued that great systems possess an intrinsic quality: they feel "alive, whole, comfortable, and frictionless." In software, this means the system never fights the user's natural physical instincts. If a waiter is carrying a tray, the mobile app must allow one-handed operation. If a cook's hands are wet, the KDS must support physical bump-bar keys.
+## 3. "The Quality Without a Name" (QWAN) — a Related Alexander Idea
+QWAN is developed most fully in Alexander's *The Timeless Way of Building*; *A Pattern Language* emphasizes living structure and interconnected patterns. The software interpretation below is derived for this skill: great systems should feel "alive, whole, comfortable, and frictionless," never fighting the user's physical instincts. If a waiter is carrying a tray, the mobile app should allow one-handed operation. If a cook's hands are wet, the KDS should support physical bump-bar keys.
 
 ---
 
 ## 4. Architectural Rules for This Skill
-1. **Physical Spatial Alignment:** Digital workflows must directly mimic the physical flow of goods, humans, and tickets in the brick-and-mortar space.
+1. **Physical Spatial Alignment:** Digital workflows should preserve the essential sequence and handoffs of the physical flow of goods, humans, and tickets; not every physical step needs a digital twin.
 2. **The Progressive Disclosure Rule:** Expose interface elements in alignment with operational urgency. Do not crowd high-speed operational screens with back-office configuration details.
 3. **Ergonomic Context Fitting:** Design every interface considering the user's physical environment (noise, light, posture, hand availability, and viewing distance).

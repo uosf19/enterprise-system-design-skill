@@ -2,7 +2,7 @@
 
 A production-grade architectural playbook for designing, auditing, and building mission-critical SaaS platforms, with a primary focus on offline-first restaurant/retail POS systems and cross-platform design systems.
 
-Synthesized from **15 foundational books** in systems thinking, design systems, distributed data, and domain architecture.
+Informed by **15 books** in systems thinking, design systems, distributed data, and domain architecture. The files in `references/` are short study notes, not substitutes for the books. Book frameworks are attributed to their sources; derived implementation guidance is labeled separately.
 
 > **Scope note:** the primary domain is multi-tenant, offline-first restaurant/retail SaaS (POS, KDS, manager mobile, admin web). The invariants are adaptable to other enterprise domains. Regulatory references are illustrative, not legal or tax advice.
 
@@ -15,10 +15,10 @@ This skill distills the core principles, invariants, and architectural rules fro
 1. **Thinking in Systems: A Primer** — *Donella H. Meadows*
 2. **Atomic Design** — *Brad Frost*
 3. **Design Systems: A Practical Guide to Creating Design Languages** — *Alla Kholmatova*
-4. **Design Systems Handbook** — *InVision (Marco Suarez et al.)*
+4. **Design Systems Handbook** — *Marco Suarez, Jina Anne, Katie Sylor-Miller, Diana Mounter, and Roy Stanfield (InVision)*
 5. **Expressive Design Systems** — *Yesenia Perez-Cruz*
-6. **Laying the Foundations: How to Design, Build, and Maintain a Design System** — *Andrew Couldwell*
-7. **Building Design Systems: Unify User Experiences** — *Sarrah Vesselov & Taurie Davis*
+6. **Laying the Foundations: A Book About Design Systems** — *Andrew Couldwell*
+7. **Building Design Systems: Unify User Experiences through a Shared Design Language** — *Sarrah Vesselov & Taurie Davis*
 8. **Practical UI Patterns for Design Systems** — *Diana MacDonald*
 9. **Frontend Architecture for Design Systems** — *Micah Godbolt*
 10. **A Pattern Language: Towns, Buildings, Construction** — *Christopher Alexander et al.*
@@ -29,6 +29,18 @@ This skill distills the core principles, invariants, and architectural rules fro
 15. **Designing for Touch** — *Josh Clark*
 
 Detailed summaries and extracted architectural rules are available in the [`references/`](references/) directory.
+
+---
+
+## Source Notes & Derived Guidance
+
+The skill distinguishes three kinds of material:
+
+- **Book frameworks and named patterns** are attributed to their source books.
+- **External standards and platform guidance** (ISO 4217, WCAG, SemVer, Apple HIG, Material Design) are cited as standards.
+- **Derived guidance** is labeled "Derived for this skill." This includes restaurant/POS workflow patterns, the five-stage component lifecycle, the three-tier token model, exact 4px/8px rules, the state-completeness rule, the 8px web adaptation of Material's 8dp spacing guidance, and 50/100 ms feedback budgets.
+
+When a section mixes book content with synthesis, the derived material is labeled in place. See `SKILL.md` for the full attribution policy.
 
 ---
 
@@ -46,10 +58,10 @@ Invariants     Engine          Design System  Language
 (Systems + DDD) (DDIA + EIP)    (Tokens + UI)  (Touch + Context)
 ```
 
-1. **Domain & Systemic Invariants:** Append-only ledgers, double-entry financial balancing, integer Money pattern (no floats), Bounded Contexts, and Anti-Corruption Layers (ACL).
-2. **Distributed Data & Resilient Sync:** Transactional Outbox pattern, compound idempotency keys `(org_id, device_id, op_id)`, monotonic client sequencing, cursor-based pull, and Dead-Letter Queue (DLQ) quarantining.
-3. **Atomic Cross-Platform Design System:** Single source-of-truth tokens (JSON) compiling to Tailwind/CSS and Flutter theme assets, 4px/8px modular grid, CSS Logical Properties for bidirectional (RTL/LTR) parity, and strict vs. loose governance.
-4. **Touch & Physical Ergonomics:** Minimum 48px × 48px hit targets with 8px separation, physical context adaptation (high-contrast KDS vs. high-density POS), and spatial operational patterns.
+1. **Domain & Systemic Invariants:** Append-only ledgers and double-entry balancing (domain standards), Fowler's Money pattern with integer minor units as this skill's implementation standard, Bounded Contexts, and Anti-Corruption Layers (ACL).
+2. **Distributed Data & Resilient Sync:** Transactional Outbox (a derived implementation of the dual-write/CDC problem), compound idempotency keys `(org_id, device_id, op_id)`, monotonic client sequencing, cursor-based pull, and Dead-Letter Queue (DLQ) quarantining.
+3. **Atomic Cross-Platform Design System:** Single source-of-truth tokens (JSON) compiling to Tailwind/CSS and Flutter theme assets, a 4px/8px modular grid (skill standard), CSS Logical Properties for bidirectional (RTL/LTR) parity, and strictness calibrated across surfaces.
+4. **Touch & Physical Ergonomics:** Platform hit-target baselines (44pt iOS / 48dp Android), a 48×48 CSS px POS/KDS target heuristic, Material's 8dp spacing guidance adapted to 8px, physical context adaptation (high-contrast KDS vs. high-density POS), and spatial operational patterns.
 
 ---
 
@@ -131,7 +143,7 @@ Reference [`SKILL.md`](SKILL.md) in your project's architectural guidelines or s
 
 - [`SKILL.md`](SKILL.md) — master playbook: scope, workflow, four pillars, and pre-flight checklist.
 - [`references/`](references/) — 15 book summaries with extracted architectural rules.
-- [`checklists/architecture-readiness.md`](checklists/architecture-readiness.md) — domain, security, observability, integration, testing, performance, and recovery gates.
+- [`checklists/architecture-readiness.md`](checklists/architecture-readiness.md) — domain, security, observability, integration, testing, performance, recovery gates, and ERP core review prompts.
 - [`checklists/offline-sync-resilience.md`](checklists/offline-sync-resilience.md) — edge durability, sync protocol, conflicts, schema migration, and observability.
 - [`checklists/design-system-tokens.md`](checklists/design-system-tokens.md) — tokens, RTL/LTR, touch ergonomics, accessibility, theming, and lifecycle.
 

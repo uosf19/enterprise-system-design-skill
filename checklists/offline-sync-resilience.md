@@ -13,7 +13,8 @@ Use this checklist when building or reviewing edge nodes, local-first desktop ap
 ---
 
 ## 2. Sync Protocol & Gateway
-- [ ] **Compound Idempotency Constraint:** Does the cloud database enforce a compound unique index on `(organization_id, device_id, operation_id)`?
+- [ ] **Compound Idempotency Constraint:** Does the cloud database enforce a compound unique index on `(organization_id, device_id, operation_id)`, and is a payload fingerprint stored so the same key with a different payload is rejected?
+- [ ] **Device Epoch:** Is `local_sequence` scoped by a `device_epoch` that changes on restore, reinstall, or clone, and are retention windows longer than the maximum offline period?
 - [ ] **In-Order Batch Processing:** Does the server apply client mutations in strict `local_sequence` order per device?
 - [ ] **Cursor-Based Pull:** Does the client pull cloud changes using an opaque monotonic cursor, committing the batch to SQLite before acknowledging the cursor?
 - [ ] **Replay Protection:** Does replaying an existing sync payload return the exact original HTTP status and response payload without side effects?
@@ -23,7 +24,7 @@ Use this checklist when building or reviewing edge nodes, local-first desktop ap
 ## 3. Conflict & Failure Management
 - [ ] **Non-Blocking Rejections:** If an operation in a batch fails validation, are independent operations allowed to continue while only dependent operations are blocked?
 - [ ] **Audited Operator Exceptions:** Are rejected transactions surfaced to a visible manager review queue with explicit remediation commands (`void_local_sale`, `reprice_and_resubmit`)?
-- [ ] **Exponential Backoff with Jitter:** Does the sync client use randomized, capped exponential backoff (`min(max_backoff, 2^n + jitter)`) to prevent thundering-herd reconnect storms?
+- [ ] **Exponential Backoff with Full Jitter:** Does the sync client use capped exponential backoff with full jitter (`random(0, min(cap, base × 2^n))`), and does the server apply admission control, to prevent thundering-herd reconnect storms?
 - [ ] **Fiscal Window Escalation:** If offline duration approaches the regulatory fiscal window (e.g., ETA e-receipt submission deadline), does the POS display escalating visual warnings and trigger late-submission workflows? Verify the current deadline per jurisdiction/document type and make it configurable.
 
 ---

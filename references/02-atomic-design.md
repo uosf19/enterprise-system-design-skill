@@ -14,7 +14,7 @@ User interfaces should not be designed or developed as static, isolated pages. I
 
 ```mermaid
 flowchart LR
-    A["1. Atoms<br/>(Tokens, Inputs, Icons)"] --> M["2. Molecules<br/>(Input + Label + Button)"]
+    A["1. Atoms<br/>(Inputs, Icons, Buttons, Labels)"] --> M["2. Molecules<br/>(Input + Label + Button)"]
     M --> O["3. Organisms<br/>(POS Keypad, KDS Card, Table Grid)"]
     O --> T["4. Templates<br/>(Structural Layout Skeletons)"]
     T --> P["5. Pages<br/>(Real Data & Edge Case Instances)"]
@@ -23,9 +23,9 @@ flowchart LR
 ### Level 1: Atoms (الذرات)
 * **Definition:** The fundamental, indivisible building blocks of the user interface.
 * **In this architecture:**
-  - **Tokens:** Color palette (brand, surface, semantic status: success/error/warning), spacing units (4px/8px scale), font weights, typography scale, border-radii, elevation shadows.
+  - **Design tokens:** Color palette (brand, surface, semantic status: success/error/warning), spacing units (4px/8px scale), font weights, typography scale, border-radii, elevation shadows. Tokens are **cross-cutting style primitives**, not a separate Atomic Design level; atoms consume them.
   - **Base Primitives:** `<Button>`, `<Input>`, `<Icon>`, `<Badge>`, `<Checkbox>`, `<Spinner>`.
-  - *Rule:* Atoms are headless or abstract on their own. They do not hold business domain state.
+  - *Rule:* Atoms are presentation primitives and do not own business domain state. "Headless" is an optional implementation style, not a requirement of Atomic Design.
 
 ### Level 2: Molecules (الجزيئات)
 * **Definition:** Simple combinations of two or more atoms bonded together to serve a single, focused purpose.
@@ -58,6 +58,8 @@ flowchart LR
 ---
 
 ## 3. Core Principles for This Skill
-1. **The Single-Direction Dependency Rule:** Atoms may never import Molecules or Organisms. Molecules may only import Atoms. Organisms may import Atoms and Molecules.
-2. **Headless Domain Separation:** Atoms and Molecules must remain 100% agnostic of backend business logic (pure presentation & interaction). Domain awareness is injected only at the Organism and Page levels.
+*Source note: Frost's five levels are the book's framework. The dependency and domain-separation rules below are engineering conventions added for this skill, not claims from the book.*
+
+1. **The Single-Direction Dependency Rule:** Atoms may never import Molecules or Organisms. Molecules may only import Atoms. Organisms may import Atoms, Molecules, and other Organisms (as the Organism definition above allows), but never Templates or Pages; avoid cycles.
+2. **Presentational Domain Separation:** Atoms and Molecules should remain agnostic of backend business logic (pure presentation and interaction). Domain awareness is injected at the Organism and Page levels. "Headless" is one way to achieve this, not the only valid architecture.
 3. **Cascading Token Updates:** Changing an atomic token (e.g., surface border-radius or primary color) must cascade universally across Web, Desktop, and Mobile without editing individual component styles.

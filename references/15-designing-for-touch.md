@@ -31,7 +31,7 @@ Touchscreens are not just "monitors without mice." Designing for touch requires 
 
 ### C. Haptic & Visual Confirmation
 * In noisy environments (coffee shops with espresso machines, noisy kitchens), auditory feedback is often lost.
-* *Derived heuristic for this skill:* every touch interaction should provide **immediate visual depression / state change**, targeting **<50 ms** and never exceeding **100 ms**, so the cashier knows the tap registered without double-tapping. Validate the actual budget on the target device.
+* *Derived heuristic for this skill:* show a prompt pressed or pending state for critical touch actions. Measure feedback on the target device and choose a budget based on observed errors and task time. Show payment success only after the relevant durable result.
 
 ---
 

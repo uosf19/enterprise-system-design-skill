@@ -40,7 +40,7 @@ flowchart LR
 * **In this architecture:**
   - **POS Fast Keypad (`<PosNumpad>`):** Numeric grid, quick-cash buttons, enter/clear actions.
   - **KDS Ticket Card (`<KitchenTicketCard>`):** Header (elapsed timer, table number), line item list, modifier checklist, bump action button.
-  - **Shift Drawer Modal (`<BlindShiftModal>`):** Denomination breakdown table, actual counted input, submission trigger.
+  - **Shift Drawer Count:** Denomination breakdown, counted amount, and authorized submission. Expected amount visibility follows the drawer policy.
   - **Floor Map Grid (`<TableFloorMap>`):** Dynamic SVG/Canvas grid rendering table nodes with covers and service statuses.
 
 ### Level 4: Templates (القوالب)

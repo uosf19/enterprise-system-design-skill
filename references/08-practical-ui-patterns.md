@@ -26,7 +26,7 @@ Before adopting or building any UI pattern, evaluate it against three derived pi
 | :--- | :--- | :--- |
 | **Split-Bill Orchestrator** | Splitting a restaurant table check by seat, item, or percentage without calculation errors. | Interactive check allocation drawer with visual balance indicator (Total − Allocated = 0). |
 | **Modifier Progression Flow** | Selecting complex recipe modifications (Size → Temperature → Milk Type → Syrups) quickly during a rush. | Single/Multi-select stepper with mandatory minimums, visual pricing deltas, and keyboard bypass. |
-| **Blind Shift Drop** | Eliminating cash theft and collusion during register reconciliation. | Double-blind cash counting form hiding expected totals until physical entries are committed. |
+| **Blind shift count (optional)** | An approved workflow calls for a count before disclosing the expected amount. | Capture the authorized count and present variance according to the drawer policy. |
 | **Exception Resolution Queue** | Reviewing biometric/WhatsApp attendance discrepancies without altering raw evidence. | Two-column audit view: Raw evidence on left, calculated timesheet on right, reason selector in center. |
 
 ### C. Identifying and Eliminating Anti-Patterns
@@ -39,5 +39,5 @@ Before adopting or building any UI pattern, evaluate it against three derived pi
 
 ## 3. Architectural Rules for This Skill
 1. **The Irreversible Action Gate:** Any destructive, financial, or data-modifying action (Void, Refund, Delete) must require secondary confirmation or elevated authorization.
-2. **State Persistence on Disruption:** Partially entered data (e.g., active orders, forms) must be continuously saved to local storage so a crash or refresh restores the exact state without data loss.
+2. **State Persistence on Disruption:** Define which drafts may be stored on each client. Test durability and recovery for supported offline actions. Keep draft, committed sale, sync and printing states explicit.
 3. **Explicit Error Remediation:** Error notifications must never be purely informational; they must always include a concrete corrective action (e.g., "Retry Sync", "Switch Printer", "Call Supervisor").

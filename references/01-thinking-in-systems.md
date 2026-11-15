@@ -6,6 +6,8 @@
 ---
 
 ## 1. Executive Summary & Core Thesis
+For stocks, flows, delays and feedback, the local evidence is Brown and Terrapin's *Systems Thinking in Action*, PDF pp. 4–9. The local Meadows copy contains preliminary material. See [source evidence](source-evidence.md) before attributing exact wording or chapter details.
+
 A system is not just a collection of separate parts; it is an interconnected set of elements coherently organized to achieve a specific function or purpose. Complex systems behave non-linearly, contain inherent time delays, and maintain stability through feedback loops. You cannot understand a system merely by analyzing its individual components—you must understand the relationships, information flows, and delays between them.
 
 ---
@@ -64,4 +66,4 @@ Meadows lists twelve leverage points, numbered from **12 (least effective)** to 
 ## 5. Architectural Rules for This Skill
 1. **The Stock Invariance Principle:** Never store or modify a running balance as an authoritative primary truth. Balances are derived projections of historical flows.
 2. **The Delay Cushion Principle:** Every offline or asynchronous boundary must incorporate a deliberate buffer capacity and bounded delay model before triggering alerts.
-3. **The Anti-Oscillation Rule:** All retry mechanisms on distributed nodes must use exponential backoff with randomized jitter to prevent reinforcing failure loops.
+3. **Retry feedback (derived):** Use bounded backoff with jitter for transient remote failures where synchronized retries can amplify load. Route permanent failures to a recorded outcome and verify uncertain external effects before trying again.

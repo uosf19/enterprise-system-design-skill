@@ -44,6 +44,6 @@ Web Standards Asset Pipeline Cross-Browser  API Contracts
 ---
 
 ## 3. Architectural Rules for This Skill
-1. **The Logical Properties Rule:** All CSS layout rules must be authored using CSS Logical Properties (`inline`/`block`) to guarantee effortless bidirectional (RTL/LTR) support.
+1. **Bidirectional layout (derived):** Use logical properties for direction-sensitive layout. Test real mixed-direction content, keyboard focus and controls. Handle transforms, icons and rendering exceptions intentionally.
 2. **The Budgeted Performance Gate:** Production builds must enforce agreed performance budgets (for example, maximum initial bundle size and a sub-150 ms p95 render target for transactional screens).
 3. **Decoupled Presentational Layer:** Presentational UI components in `packages/ui` must never contain direct API calls, WebSocket clients, or database drivers. They accept props and emit events.

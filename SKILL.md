@@ -1,11 +1,11 @@
 ---
 name: enterprise-system-design
-description: Enterprise system design and multi-stack architecture for complex SaaS platforms, offline-first restaurant/retail POS systems, financial and inventory ledgers, domain-driven design, and cross-platform design systems. Informed by 15 books; POS-centered, with ERP back-office gaps listed in the Scope section. Use when designing, reviewing, or implementing enterprise SaaS, POS/retail, offline sync, RTL interfaces, design tokens, or multi-client frontend architecture.
+description: Use when designing, reviewing, or implementing offline-first POS or ERP workflows, tenant boundaries, financial or inventory ledgers, cross-client contracts, or shared design systems with RTL and touch requirements. Skip for isolated styling or standalone CRUD without those concerns.
 ---
 
 # Enterprise System Design & Multi-Stack Architecture Skill
 
-This skill is a production-grade architectural playbook for designing, auditing, and scaling mission-critical SaaS platforms. Its primary focus is offline-first restaurant/retail POS systems and cross-platform design systems, but its invariants apply to other multi-tenant enterprise domains. It is informed by 15 engineering and design books (short study notes in `references/`) and adds derived invariants, heuristics, and checklists, labeled as such.
+This skill covers offline-first POS, enterprise data boundaries, and cross-platform design systems. It combines study notes, documented invariants, and verification scenarios. Check [source evidence](references/source-evidence.md) before attributing a specific claim to a book.
 
 ---
 
@@ -13,13 +13,14 @@ This skill is a production-grade architectural playbook for designing, auditing,
 
 - **Primary domain:** multi-tenant, offline-first restaurant/retail SaaS (POS, KDS, manager mobile, admin web).
 - **Stack examples:** Next.js, Tauri, Flutter, and PostgreSQL are illustrative; the patterns are stack-agnostic.
+- **Project precedence:** Use the project's current architecture, operating decisions, and release gates for implementation. In Universal ERP, start with `docs/project/erp-master-plan.md` and its topic map. Examples in this skill apply only where compatible with those decisions. Record material gaps or conflicts before changing behavior.
 - **Regulatory examples:** ETA, Paymob, Fawry, and similar references are illustrative, not legal or tax advice. Verify current rules for each jurisdiction and document type.
 - **Not a complexity mandate:** simple CRUD or low-scale applications should not adopt DDD aggregates, outbox, or event sourcing without a real consistency, audit, or scale requirement.
 - **Language note:** Arabic glosses in the references support MENA teams; they are explanatory, not required terminology.
 - **Companion skill:** for code-level quality (naming, refactoring, tests) use `code-craftsmanship`. Where the two meet: "crash early" there means abort the faulty operation and quarantine it here (a POS must keep serving other sales); and input validation at the boundary there complements, not replaces, the aggregate invariants here.
 
 ### Known Gaps (not covered in depth)
-This skill is strongest on POS, offline sync, and design systems. For a full ERP, add guidance for: fiscal period close and locking; legally required, gapless document numbering (verify per jurisdiction); inventory costing (FIFO/weighted average); tenancy isolation model; authorization model (RBAC/ABAC); reporting/read-model separation from transactional tables; effective-dated tax and price rules. `checklists/architecture-readiness.md` section 8 lists these as review prompts.
+This skill focuses on POS, offline sync and design systems. The [architecture checklist](checklists/architecture-readiness.md) lists additional ERP concerns, including period close, fiscal numbering, costing, access scope, reporting and effective-dated rules. Apply them when the corresponding workflow is in scope and use the approved accounting or provider policy.
 
 ---
 
@@ -29,7 +30,7 @@ This skill separates three kinds of material:
 
 1. **Book frameworks and named patterns** — attributed to the source book (e.g., Meadows' leverage points, Frost's atomic levels, Fowler's Money/Unit of Work/Optimistic Offline Lock, Alexander's architectural patterns, EIP's messaging patterns).
 2. **External standards and platform guidance** — ISO 4217, WCAG, Semantic Versioning, Apple HIG, and Material Design.
-3. **Derived guidance for this skill** — restaurant/POS workflow patterns, the five-stage component lifecycle, the three-tier token model, exact 4px/8px rules, the 8px web adaptation of Material's 8dp spacing guidance, and 50/100 ms feedback budgets. These are implementation recommendations, not claims about what the source books say.
+3. **Derived guidance for this skill** — restaurant/POS workflow patterns, component lifecycle stages, token tiers, spacing scales and physical-device test heuristics. Validate implementation choices against the project's constraints.
 
 Where a section mixes these, the text labels the derived material.
 
@@ -38,11 +39,10 @@ Where a section mixes these, the text labels the derived material.
 ## How to Apply This Skill
 
 1. **Classify the task.**
-   - Domain modeling, ledgers, money → Pillar 1 + references 01, 12, 13 + `checklists/architecture-readiness.md`.
-   - Offline sync, idempotency, messaging → Pillar 2 + references 01, 11, 14 + `checklists/offline-sync-resilience.md`.
-   - Design tokens, components, RTL → Pillar 3 + references 02–09 + `checklists/design-system-tokens.md`.
-   - Touch ergonomics, physical context → Pillar 4 + references 10, 15 + `checklists/design-system-tokens.md`.
-   - Architecture review → this file + all three checklists.
+   - Domain modeling, ledgers and money → Pillar 1, [architecture review](checklists/architecture-readiness.md), and [Money and persistence](references/13-patterns-of-enterprise-application-architecture.md).
+   - Offline sync and integration → Pillar 2, [offline workflow](references/offline-pos-workflow.md), and [sync checklist](checklists/offline-sync-resilience.md).
+   - Shared UI, RTL and touch → Pillars 3–4 and the [design checklist](checklists/design-system-tokens.md). Open the references for the specific patterns under review.
+   - Architecture review → [architecture checklist](checklists/architecture-readiness.md), with the sync or design checklist where the scope includes those concerns.
 2. **Read progressively.** Use this file first; open only the relevant reference(s) and checklist for the task.
 3. **Make decisions explicit.** State the chosen pattern, its trade-offs, and any unresolved risks. Do not silently apply a pattern that the context does not justify.
 4. **Verify before approval.** Run the relevant checklist before approving a design, RFC, or pull request.
@@ -66,9 +66,9 @@ Invariants     Engine          Design System  Language
 ---
 
 ## Pillar 1: Domain & Systemic Invariants
-*Foundations: Thinking in Systems (Meadows), Implementing DDD (Vernon), Patterns of Enterprise Application Architecture (Fowler).*
+*Foundations: systems thinking, Implementing DDD (Vernon), and Patterns of Enterprise Application Architecture (Fowler).*
 
-*Source note: Meadows supplies stocks/flows and leverage points; Vernon supplies bounded contexts and aggregates; Fowler supplies Money, Unit of Work, and Optimistic Offline Lock. Double-entry accounting and the append-only ledger are domain standards adopted for this skill.*
+*Source note: Brown and Terrapin's primer is the local evidence for stocks, flows, and delays. Vernon supplies bounded contexts and aggregates. Fowler supplies Money, Unit of Work, and Optimistic Offline Lock. The ledger design below is domain guidance.*
 
 ### 1. The Stock & Flow Ledger Invariant
 - **Rule:** The ledger of movements is the source of truth; a balance or quantity is never the only record of a change. A stored balance is allowed only as a **projection** that is updated in the same transaction as the ledger insert (or recomputed from it) and can be reconciled against it. Never overwrite a balance without a corresponding ledger entry.
@@ -77,24 +77,22 @@ Invariants     Engine          Design System  Language
   ```text
   Stock Balance(t) = Σ Inflows − Σ Outflows
   ```
-- **Double-Entry Balance:** Every financial journal entry must enforce debit-credit equality (`Σ Debits = Σ Credits`, equivalently `Σ Debits − Σ Credits = 0`) inside the database transaction before commitment.
+- **Double-Entry Balance:** When the scope includes a double-entry journal, enforce debit-credit equality inside the posting transaction under its currency rules. Operational cash and stock ledgers follow their own invariants and can ship before general-ledger posting.
 
 ### 2. The Money Pattern
 *Fowler's Money pattern is the amount-plus-currency abstraction; the integer-minor-unit storage rule below is this skill's implementation standard.*
-- **Rule:** Floating-point arithmetic is strictly prohibited for monetary representation.
-- **Implementation:** Store and calculate all money in integer minor units (e.g., piasters/cents) paired with an explicit ISO 4217 currency code (the minor-unit scale is looked up from the currency, not stored on each value):
+- **Posted amounts:** Store integer minor units with currency. Use the currency scale when rendering. Validate currency and the supported signed amount range at boundaries and before persistence.
+- **Arithmetic and contracts:** Keep rates and intermediate products exact (for example, `bigint` and integer ratios, or a decimal type with explicit precision and rounding). JSON can carry canonical integer strings with validated range across languages. Use JSON numbers only with an explicit safe range for values and any arithmetic done as `number`.
   ```typescript
   interface Money {
-    readonly amount: number;   // integer minor units (15050 = 150.50 EGP)
-    readonly currency: string; // ISO 4217 code: "EGP", "USD", "JPY", "KWD"
-    // scale (decimal digits: 2 for EGP/USD, 0 for JPY, 3 for KWD) comes from a currency table keyed by `currency`
+    readonly amountMinor: bigint; // 15050n represents 150.50 EGP
+    readonly currency: string;   // validated ISO 4217 code
   }
   ```
-- `number` is safe for typical amounts; for very large ledgers or high-precision aggregation, use `bigint` or a decimal library.
-- **Rounding:** Use a documented deterministic policy. Banker's rounding (half-even) is a safe default for aggregated financial calculations; some jurisdictions require half-up. Encode and test the policy once in the domain core. When splitting an amount (split bills, discounts, tax distribution), use an **allocation** routine that distributes the remainder (100.00 / 3 = 33.34 + 33.33 + 33.33) so parts always sum to the whole; Fowler's Money pattern covers this.
+- **Rounding and allocation:** Specify rounding stages, signed tie behavior, and stable remainder ordering from the applicable policy. Preserve the amount and rule revisions applied to each sale. Share exact vectors for limits, signed values, ties, and conservation of totals (for example, 100.00 split into 33.34 + 33.33 + 33.33). Use synthetic fiscal values until the relevant rules are verified.
 
 ### 3. Bounded Context & Aggregate Boundaries
-- **Rule:** An Aggregate is the consistency boundary. Prefer one Aggregate instance per database transaction; when multiple aggregates must change together, coordinate them asynchronously via Domain Events and the Transactional Outbox, or explicitly justify the larger transaction.
+- **Rule:** Identify the business facts that must commit or roll back together. Model small aggregate boundaries around immediate invariants and document any transaction spanning them. Coordinate only effects that tolerate delay through domain events and the outbox. For the Universal ERP cash sale, save the sale, tender, immutable receipt data, print job and sync command in one local transaction. Dispatch printing after commit.
 - **Reference by identity:** Aggregates hold other aggregates' IDs, not object references (Vernon). Order lines store the item ID plus a snapshot of the price and tax rule applied at sale time.
 - **Anti-Corruption Layer (ACL):** External vendor payloads (payment gateways, tax authorities, biometric clocks) must be parsed and mapped through an Anti-Corruption Layer before entering the domain model.
 
@@ -115,29 +113,28 @@ Invariants     Engine          Design System  Language
   VALUES (gen_random_uuid(), 'sales.order_placed.v1', :payload, 'pending');
   COMMIT;
   ```
-- A background outbox worker polls or streams events from the outbox table to the message broker.
+- An outbox worker can process records from the same database. Add a broker only for a justified delivery need. Give effects stable IDs and make consumers idempotent across worker retries.
 
 ### 2. Deterministic Idempotency Key Invariant
-- **Rule:** All retryable write APIs, sync endpoints, and external webhook receivers must enforce idempotency using a unique key, typically scoped to the tenant and client:
+- **Rule:** Enforce a unique, contract-defined retry identity. For Universal ERP POS operations:
   ```text
-  Idempotency Key = (organization_id, device_id, operation_id)
+  Idempotency Key = (organization_id, device_id, device_epoch, operation_id)
   ```
-  For server-originated operations, use a stable client or worker ID in place of `device_id`.
-- Retrying an identical operation must return the cached original result without re-executing business logic or creating duplicate records.
-- Store a fingerprint (hash) of the request payload with the key. The same key with a **different** payload is a client bug: reject it (409/422) instead of returning the old result.
-- Define a retention window for stored keys and responses, longer than the maximum offline period you support.
+  For other integrations, scope the key to the authenticated tenant and source under their contract.
+- Commit the key, versioned request fingerprint, recorded outcome, domain effect and any outbox record together. After checking the caller's scope, replay the original outcome for a matching request. Route the same key with different content to review without reapplying effects. Define which contract fields are hashed and how they are canonicalized.
+- Set retention from supported outages, backup recovery and late arrivals. Keep stable business references (sale or receipt ID, transfer receipt cycle) to reconcile across different keys, expired retry records or a new epoch.
 
 ### 3. Monotonic Logical Sequencing & Conflict Resolution
 - **Rule:** Never rely on device wall-clock timestamps for distributed transaction ordering.
 - **Implementation:**
-  - Clients emit a strictly monotonic sequence counter per device (`local_sequence`), scoped by a `device_epoch` that changes whenever the local database is restored, reinstalled, or cloned, so a reset counter cannot collide with old idempotency keys.
+  - Clients emit `local_sequence` scoped to device and epoch. When restoring or reinstalling, reconcile the prior history and pending identities before issuing new work in a new epoch. Give each enrolled device its own identity.
   - Per-device counters order one device's operations only; they do not give a causal order across devices.
-  - Servers validate the sequence and track cloud changes with opaque sequential cursors.
-  - Append-only ledgers converge via idempotent replay and set union.
+  - Recover gaps in the device sequence. Record business rejections as outcomes and continue independent work under the project policy. Apply pulled updates and their cursor atomically before acknowledgement.
+  - Keep distinct claims as evidence. Post their effects only after domain deduplication and conflict handling. Two equivalent confirmations of the same transfer receipt cycle count once even with different retry keys. Conflicting counts or shipment revisions enter review under that cycle.
   - Editable entity conflicts affecting money, stock, or compliance are isolated into an explicit operator review queue (`AttendanceCase`, `ReconciliationException`), never resolved via silent Last-Write-Wins (LWW). Reserve LWW for non-critical fields with a documented classification.
 
 ### 4. Dead-Letter Queue (DLQ) & Quarantine Isolation
-- External adapter failures (e.g., rejected tax submissions, malformed webhooks) must be isolated into a Dead Letter Queue after capped exponential backoff with jitter (preferably full jitter: `delay_n = random(0, min(cap, base × 2^n))`, e.g., a 5-minute cap; small additive jitter spreads a reconnect storm poorly). Never drop messages or halt the upstream processing queue.
+- Retry transient failures with bounded exponential backoff and jitter. Route invalid data and business rejections to a recorded outcome or authorized review immediately. Verify an uncertain payment or print against its stable reference before repeating an external action. For an already paid or issued sale, preserve the original and correct through an authorized linked refund or adjustment. Keep unrelated work moving.
 
 ---
 
@@ -180,43 +177,22 @@ Invariants     Engine          Design System  Language
 
 | Surface | Operating Environment | Architectural Requirements |
 | :--- | :--- | :--- |
-| **POS Terminal** | Cashier standing, rapid counter rush, direct lighting. | High-density grid, Numpad on right edge, instant visual depression feedback (heuristic: target <50ms; never exceed 100ms), one-tap tender buttons. |
-| **Kitchen Display (KDS)** | 3-meter distance, steam, grease, poor viewing angles. | High-contrast dark theme, oversized typography, status-colored cards, hardware keyboard / bump-bar navigation. |
-| **Manager Mobile** | On-the-go, one-handed thumb grip. | Primary actions inside the easy-reach lower-third thumb zone; destructive actions require explicit confirmation and must not sit next to frequent actions. |
+| **POS Terminal** | Standing operator, rush workload, glare. | Keep totals and primary actions in reach. Measure feedback, tap accuracy, and keyboard access on the target layout in both directions. Separate tender and cancellation. |
+| **Kitchen Display (KDS)** | Viewing distance, steam, glare, and limited reach vary. | Validate legibility and controls at the actual distance. Label status in text as well as color and test keyboard or bump-bar operation where present. |
+| **Manager Mobile** | On-the-go, one- or two-handed grip. | Test reach in both hands. Separate destructive actions from frequent actions and use the confirmation or authorization required by the workflow. |
 | **Admin Web Console** | Desktop monitor, office environment, mouse & keyboard. | High data density, sortable tables, keyboard navigation shortcuts, multi-column filters. |
 
 ### 3. Spatial Restaurant & Retail Patterns
 Alexander's architectural patterns that inform this section include **Street Cafe (88)**, **Food Stands (93)**, **Intimacy Gradient (127)**, **Eating Atmosphere (182)**, and **Cooking Layout (184)**. The following software patterns are derived for this skill, not Alexander pattern names:
 - **Linear Checkout Flow (derived):** Fast, linear checkout (`Items -> Modifiers -> Subtotal -> Cash -> Receipt -> Drawer Kick`).
 - **Expo Synchronization View (derived):** Dedicated expo screen synchronizing multi-station preparation (Hot Kitchen + Bar + Salad) before marking an order ready for pickup.
-- **Blind Shift Drop (derived):** Forcing the cashier to input counted cash blind (without showing the system expected total) to prevent theft and calculate auditable cash variance.
+- **Blind Shift Count (optional):** Showing the expected amount only after counting is a policy option. Follow the approved procedure for the drawer and keep expected, counted, and variance amounts auditable.
 
 ---
 
-## Architectural Decision Checklist (Before Writing Any Module)
+## Architectural Decision Checklist
 
-When building or reviewing any module in an enterprise multi-stack project, run this checklist:
-
-```markdown
-### 1. Domain & Ledger
-- [ ] Is the movement ledger the source of truth, with any stored balance a reconcilable projection updated in the same transaction?
-- [ ] Is money stored exclusively as integer minor units with an ISO 4217 currency code (scale derived from the currency), with allocation for splits?
-- [ ] Is the rounding policy documented and tested?
-- [ ] Does this transaction ideally touch only a single Aggregate Root?
-- [ ] Is external vendor data sanitized behind an Anti-Corruption Layer (ACL)?
-
-### 2. Distributed Sync & Reliability
-- [ ] Is the state change committed atomically with an Outbox event record?
-- [ ] Does every retryable mutation API accept and enforce a unique idempotency key?
-- [ ] Are retry mechanisms using capped exponential backoff with randomized jitter?
-- [ ] Are failed asynchronous tasks routed to a Dead-Letter Queue (DLQ)?
-
-### 3. Design System & Cross-Platform UI
-- [ ] Are all colors, spaces, and typography derived from centralized Design Tokens?
-- [ ] Are directional layouts built with CSS Logical Properties where supported for full RTL/LTR parity?
-- [ ] Do POS/mobile touch targets meet the platform baseline (44pt iOS / 48dp Android) and at least 48×48 CSS px where practical, validated on hardware, with a documented separation rule (e.g., 8px)?
-- [ ] Does the component handle the states this skill requires: Default, Focus-visible, Active/Pressed, Loading, Disabled; Hover where a pointer exists; plus Error and Empty where the component can fail or have no data?
-```
+Use the [architecture checklist](checklists/architecture-readiness.md) for applicable domain and system concerns. Use the [sync checklist](checklists/offline-sync-resilience.md) for client durability and the [design checklist](checklists/design-system-tokens.md) for shared interfaces.
 
 ---
 

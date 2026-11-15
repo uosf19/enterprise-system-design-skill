@@ -32,6 +32,6 @@ The book discusses brand expression, process, communication, variation, and mana
 ---
 
 ## 3. Architectural Rules for This Skill
-1. **The Contextual Density Invariant:** Every component in the system must support explicit density modes (e.g., `compact`, `comfortable`, `spacious`) driven by context, never hardcoded.
+1. **Contextual density (derived):** Add a density mode to components only where distinct environments need it and representative workflows can test it. Preserve hit targets and readability under the selected density.
 2. **The Environmental Legibility Standard:** High-stress interfaces (POS, KDS) must prioritize glanceability and high contrast over aesthetic subtlety.
 3. **The Platform-Native Exception Rule (derived):** Platform-specific native capabilities (e.g., native biometric prompts or hardware printer status) may deviate from generic web conventions to honor native ergonomics.

@@ -62,6 +62,6 @@ class SalesOrder {
 ---
 
 ## 4. Architectural Rules for This Skill
-1. **The Aggregate Boundary Invariant:** Aggregates reference each other by identity (ID), not by object reference, and a database transaction should ideally modify only one Aggregate instance at a time. Modifications to other aggregates should be handled via Domain Events (and, where needed, the outbox implementation in Pillar 2).
+1. **Aggregate boundaries:** Reference other aggregates by identity. Start with the business invariants that require immediate consistency and keep their writes atomic. Treat a small single-aggregate transaction as a design default. Document wider transactions where the workflow requires them. Use domain events and an outbox for effects that can arrive later.
 2. **Value Object Primacy for Money & Quantity:** Never represent monetary values or physical quantities as raw numbers (`number` or `float`). Always encapsulate them in strongly typed Value Objects with explicit currency and unit of measure.
 3. **The Anti-Corruption Gate (ACL):** External vendor payloads (ETA receipts, payment webhooks, biometric clocks) must be sanitized and converted through an Anti-Corruption Layer before entering the domain core.

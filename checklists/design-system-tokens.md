@@ -16,15 +16,16 @@ Items labeled "skill standard" or "heuristic" are implementation choices, not cl
 
 ## 2. Bidirectional & Multilingual Support (RTL / LTR)
 - [ ] **CSS Logical Properties:** Does directional CSS use `inline-start` / `inline-end` instead of `left` / `right` where supported, with direction-aware helpers for properties that have no logical equivalent?
-- [ ] **Optical Baseline Alignment:** Do Arabic (e.g., Cairo / Noto Kufi) and Latin typography scales align on the same baseline grid to eliminate layout shifts when switching language?
+- [ ] **Legible Typography:** Test Arabic and Latin at supported sizes in the actual UI and printed receipt. Check wrapping, baseline, diacritics, clipping and line height with realistic long names and modifiers.
 - [ ] **Mirroring Compliance:** Are directional icons (back arrows, disclosure chevrons, stepper indicators) automatically mirrored in RTL mode?
+- [ ] **Mixed Direction and Keyboard:** Test Arabic with Latin order IDs, quantities, prices, currency, dates and negatives. Use bidirectional isolation where needed. Verify logical tab order, visible focus, keyboard activation and printed line breaks in both directions.
 
 ---
 
 ## 3. Touch & Physical Ergonomics
 - [ ] **Platform Hit Target:** Do POS, KDS, and mobile targets meet the platform baseline (44pt iOS / 48dp Android) and at least 48×48 CSS px where practical, validated on target hardware?
 - [ ] **Touch Separation:** Is there at least an 8px buffer between adjacent touchable buttons (adapting Material's 8dp guidance) to reduce mis-taps during rush hours?
-- [ ] **Instant Touch Feedback (heuristic):** Does pressing a touch element provide immediate visual depression/highlight state (target <50ms; never exceed 100ms, validated on the device)?
+- [ ] **Touch Feedback (heuristic):** Measure input feedback, reach and mis-taps on representative hardware and workflows. Separate payment and cancellation. Acknowledging a tap and confirming a durable business result are distinct states.
 - [ ] **State Completeness (skill requirement):** Does the component handle `Default`, `Focus-visible`, `Active/Pressed`, `Loading`, and `Disabled`; `Hover` only where a pointer exists; and `Error`/`Empty` where it can fail or have no data?
 
 ---
@@ -35,3 +36,4 @@ Items labeled "skill standard" or "heuristic" are implementation choices, not cl
 - [ ] **Theme Derivation:** Are light, dark, and high-contrast themes generated from the same semantic tokens rather than forked palettes?
 - [ ] **Token Versioning:** Are token and component versions and deprecations documented with migration paths?
 - [ ] **Accessible States:** Do form controls define Selected and Read-only states in addition to the states above? Do touch targets also satisfy WCAG 2.2 Target Size (Minimum)?
+- [ ] **Transactional States:** Identify status with text as well as color. Exercise saved locally, pending sync, and printer outcome unknown together. Show the next available action and reference without implying the sale failed.

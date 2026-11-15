@@ -41,13 +41,13 @@ Kholmatova treats **strictness** as a system parameter on a spectrum, not as a b
 
 ## 3. Design Principles (The 3 to 5 Guidance)
 Kholmatova recommends a small set of design principles—roughly **three to five**—that are opinionated and actionable. The examples below are derived for this skill:
-1. **Speed Over Decoration in Transactional Screens:** The cashier must complete a transaction in under 3 taps. Beauty never trumps ergonomics.
+1. **Efficient checkout (derived):** Measure time and tap errors for a named scenario on the target device. Simplify frequent actions while preserving the approval and confirmation steps the workflow requires.
 2. **Deterministic Clarity in Financial States:** Every financial status (Paid, Partial, Refunded, Voided) must have an unambiguous, standardized visual marker.
 3. **No Dead Ends:** Every error state must provide an actionable remedy or fallback route.
 
 ---
 
 ## 4. Architectural Rules for This Skill
-1. **The Semantic Naming Invariant:** Never name a token, component, or state based on its visual representation. Always name it according to its semantic business purpose.
+1. **Semantic naming:** Use purpose-based names for semantic tokens and states. Primitive palette values can use descriptive color names.
 2. **Calibrated Governance:** Treat strictness as a spectrum. Apply tighter enforcement to core transactional modules (POS, Billing, Tax) and looser guidance to reporting surfaces; document where each applies.
 3. **Living Documentation Integration:** A pattern is only considered "Production-Ready" when its code, design tokens, and domain rules are documented together in a single accessible registry.

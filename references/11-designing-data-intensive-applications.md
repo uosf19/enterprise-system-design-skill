@@ -6,7 +6,7 @@
 ---
 
 ## 1. Executive Summary & Core Thesis
-Software systems fail not because hardware is broken, but because software engineers make false assumptions about network reliability, clock synchronization, and data consistency. Martin Kleppmann provides the foundational principles for engineering reliable, scalable, and maintainable systems across heterogeneous data stores, distributed nodes, and asynchronous communication streams.
+Martin Kleppmann treats hardware, software, human error, and network partial failures as inputs to reliable system design. Relevant sections in the local edition are Chapter 7 on transactions, Chapter 8 on partial failures, and Chapters 11–12 on idempotence and derived data. See [source evidence](source-evidence.md).
 
 ---
 
@@ -24,15 +24,15 @@ Software systems fail not because hardware is broken, but because software engin
 
 ### C. The Dual-Write Problem, Outbox, and Change Data Capture (CDC)
 *Source note: DDIA analyzes dual writes and log-based integration/CDC in Chapter 11, but it does not present "Transactional Outbox" as a named DDIA pattern. The named pattern is commonly credited to Chris Richardson's microservices catalog. The outbox implementation below is added for this skill.*
-* **The Dual-Write Problem:** Updating a database table and publishing an event to a message queue in two separate steps leads to data corruption if the system crashes in between.
-* **The Outbox Solution:** The business mutation and the outbound event record are committed inside the **exact same ACID database transaction**. A separate worker process polls or tails the outbox table to publish events with at-least-once delivery guarantees.
+* **The Dual-Write Problem:** A failure between a database commit and an independent publish can leave one effect recorded without the other.
+* **The Outbox Solution:** The business mutation and outbound event commit atomically. A worker reads the outbox and delivers to a local consumer or a broker if the project uses one. The worker can fail after applying or publishing an event but before recording acknowledgement, so consumers make replay safe.
 
 ```mermaid
 sequenceDiagram
     participant API as POS / Application
     participant DB as PostgreSQL (ACID)
     participant Worker as Outbox Worker
-    participant Bus as Redis / Event Bus
+    participant Consumer as Idempotent Consumer
 
     API->>DB: BEGIN Transaction
     API->>DB: INSERT into Sales Orders
@@ -40,16 +40,16 @@ sequenceDiagram
     API->>DB: COMMIT Transaction
     Note over DB: Atomically Guaranteed
     Worker->>DB: Poll / Read Outbox
-    Worker->>Bus: Publish Event
-    Worker->>DB: Mark Outbox Event as Published
+    Worker->>Consumer: Deliver stable event ID
+    Consumer-->>Worker: Acknowledge committed result
+    Worker->>DB: Record delivery outcome
 ```
 
 ### D. Idempotency & Conflict Resolution in Hybrid Offline Sync
 *Derived for this skill: DDIA provides the underlying theory (idempotence, exactly-once vs. at-least-once delivery, and causal ordering), but the API-level idempotency-key convention and append-only ledger rules below are implementation guidance for this domain.*
-* **Idempotency Keys:** Every mutation originating on an edge device (POS) must carry a unique, client-generated UUID idempotency key:
-  `Key = (organization_id, device_id, operation_id)`
-  Replaying the exact same request must return the identical outcome without creating duplicate payments or inventory deductions.
-* **Semantic Conflict Resolution:** Generic Last-Write-Wins (LWW) causes silent data loss. Financial and inventory records must be **append-only ledgers**, where conflicts are resolved by explicit reversal or human review queues, never blind overwrites.
+* **Idempotency Keys:** Universal ERP uses `(organization_id, device_id, device_epoch, operation_id)`. Persist the canonical versioned fingerprint and recorded result with the effect. Replay matching operations. Route changed content under the same key to review.
+* **Stable Business Identity:** Restore or a different device can produce a different retry key for the same fact. Reconcile by sale or receipt ID and by receipt cycle for transfers. Store distinct claims for audit, normalize and compare business facts, and post the domain effect once.
+* **Semantic Conflict Resolution:** Preserve posted money and stock records and resolve disputed facts with authorized review and linked corrections. See the [offline POS workflow](offline-pos-workflow.md).
 
 ---
 

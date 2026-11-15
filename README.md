@@ -1,8 +1,8 @@
 # Enterprise System Design & Multi-Stack Architecture Skill
 
-A production-grade architectural playbook for designing, auditing, and building mission-critical SaaS platforms, with a primary focus on offline-first restaurant/retail POS systems and cross-platform design systems.
+A playbook for offline-first restaurant and retail POS, enterprise data boundaries, and shared design systems.
 
-Informed by **15 books** in systems thinking, design systems, distributed data, and domain architecture. The files in `references/` are short study notes, not substitutes for the books. Book frameworks are attributed to their sources; derived implementation guidance is labeled separately.
+The study notes draw on 15 book references and related material. The [source evidence index](references/source-evidence.md) records the material checked, including excerpts and summaries, and distinguishes derived implementation guidance.
 
 > **Scope note:** the primary domain is multi-tenant, offline-first restaurant/retail SaaS (POS, KDS, manager mobile, admin web). The invariants are adaptable to other enterprise domains. Regulatory references are illustrative, not legal or tax advice.
 
@@ -38,7 +38,7 @@ The skill distinguishes three kinds of material:
 
 - **Book frameworks and named patterns** are attributed to their source books.
 - **External standards and platform guidance** (ISO 4217, WCAG, SemVer, Apple HIG, Material Design) are cited as standards.
-- **Derived guidance** is labeled "Derived for this skill." This includes restaurant/POS workflow patterns, the five-stage component lifecycle, the three-tier token model, exact 4px/8px rules, the state-completeness rule, the 8px web adaptation of Material's 8dp spacing guidance, and 50/100 ms feedback budgets.
+- **Derived guidance** includes the POS workflows, component lifecycle, token tiers, state coverage, and physical-device heuristics. Use approved project decisions and the applicable release gates when implementing them.
 
 When a section mixes book content with synthesis, the derived material is labeled in place. See `SKILL.md` for the full attribution policy.
 
@@ -59,7 +59,7 @@ Invariants     Engine          Design System  Language
 ```
 
 1. **Domain & Systemic Invariants:** Append-only ledgers and double-entry balancing (domain standards), Fowler's Money pattern with integer minor units as this skill's implementation standard, Bounded Contexts, and Anti-Corruption Layers (ACL).
-2. **Distributed Data & Resilient Sync:** Transactional Outbox (a derived implementation of the dual-write/CDC problem), compound idempotency keys `(org_id, device_id, op_id)`, monotonic client sequencing, cursor-based pull, and Dead-Letter Queue (DLQ) quarantining.
+2. **Distributed Data & Resilient Sync:** Transactional outbox, epoch-scoped POS retry keys, stable business identities across restores, cursor-based pull and distinct retry, review and verification paths.
 3. **Atomic Cross-Platform Design System:** Single source-of-truth tokens (JSON) compiling to Tailwind/CSS and Flutter theme assets, a 4px/8px modular grid (skill standard), CSS Logical Properties for bidirectional (RTL/LTR) parity, and strictness calibrated across surfaces.
 4. **Touch & Physical Ergonomics:** Platform hit-target baselines (44pt iOS / 48dp Android), a 48×48 CSS px POS/KDS target heuristic, Material's 8dp spacing guidance adapted to 8px, physical context adaptation (high-contrast KDS vs. high-density POS), and spatial operational patterns.
 
@@ -98,7 +98,9 @@ enterprise-system-design-skill/
 │   ├── 12-implementing-domain-driven-design.md
 │   ├── 13-patterns-of-enterprise-application-architecture.md
 │   ├── 14-enterprise-integration-patterns.md
-│   └── 15-designing-for-touch.md
+│   ├── 15-designing-for-touch.md
+│   ├── offline-pos-workflow.md
+│   └── source-evidence.md
 └── checklists/              # Operational checklists for architecture & code review
     ├── architecture-readiness.md
     ├── offline-sync-resilience.md
@@ -109,40 +111,14 @@ enterprise-system-design-skill/
 
 ## Installation
 
-### Option A: Install in an Agent Skills directory
-
-Clone the repository into the skills directory used by your agent. The folder name should match the skill name (`enterprise-system-design`).
-
-**Personal (available across projects):**
-
-```bash
-# Claude Code
-git clone https://github.com/uosf19/enterprise-system-design-skill.git ~/.claude/skills/enterprise-system-design
-
-# Cursor / Codex
-git clone https://github.com/uosf19/enterprise-system-design-skill.git ~/.cursor/skills/enterprise-system-design
-```
-
-**Project-local (shared with the repository):**
-
-```bash
-git clone https://github.com/uosf19/enterprise-system-design-skill.git .claude/skills/enterprise-system-design
-
-# Also commonly used: .cursor/skills/, .opencode/skills/
-```
-
-For Antigravity or another agent, use its documented global or project skills directory.
-
-### Option B: Use in any project
-
-Reference [`SKILL.md`](SKILL.md) in your project's architectural guidelines or system prompt. Agents that support Agent Skills can discover it through the frontmatter description; other agents can be pointed to `SKILL.md` explicitly.
+Install the complete `enterprise-system-design` folder from the chosen release using your agent's documented skills directory. For a project-scoped Codex installation, place it under `.agents/skills/` and verify it appears in the skill selector. Use one discoverable copy per name. You can also point an agent directly to [SKILL.md](SKILL.md) without installing it. [Codex skill discovery](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)
 
 ---
 
 ## 🧰 What's Inside
 
-- [`SKILL.md`](SKILL.md) — master playbook: scope, workflow, four pillars, and pre-flight checklist.
-- [`references/`](references/) — 15 book summaries with extracted architectural rules.
+- [`SKILL.md`](SKILL.md) — scope, workflow, four pillars, and checklist routing.
+- [Offline POS workflow](references/offline-pos-workflow.md) — transaction boundaries and failure scenarios.
 - [`checklists/architecture-readiness.md`](checklists/architecture-readiness.md) — domain, security, observability, integration, testing, performance, recovery gates, and ERP core review prompts.
 - [`checklists/offline-sync-resilience.md`](checklists/offline-sync-resilience.md) — edge durability, sync protocol, conflicts, schema migration, and observability.
 - [`checklists/design-system-tokens.md`](checklists/design-system-tokens.md) — tokens, RTL/LTR, touch ergonomics, accessibility, theming, and lifecycle.

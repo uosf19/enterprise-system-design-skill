@@ -36,7 +36,7 @@ Enterprise software never lives in a vacuum. It must communicate with external t
 
 ### B. Routing & Failure Handling Patterns
 * **Dead Letter Channel (طابور الرسائل الميتة - DLQ):**
-  - When an asynchronous message fails processing after max retry attempts (e.g., ETA API rejected receipt due to invalid tax ID), the system does not drop it or freeze the queue. It moves the poisoned message to a Dead Letter Queue for operator inspection and alerts.
+  - The book distinguishes undeliverable messages from invalid messages. In this skill's adaptation, isolate exhausted delivery failures and malformed or permanent rejections with distinct outcomes. An invalid tax document goes through approved correction or review without retrying unchanged content.
 * **Content-Based Router (الموجّه المبني على المحتوى):**
   - Directs incoming orders or kitchen tickets to specific stations (Grill station, Barista station, Dessert prep) based on the metadata and category flags inside the order line items.
 
@@ -44,5 +44,5 @@ Enterprise software never lives in a vacuum. It must communicate with external t
 
 ## 3. Architectural Rules for This Skill
 1. **The Idempotent Consumer Invariant:** Every event handler and webhook endpoint must check and store the external message/event ID before executing any business logic.
-2. **The Dead-Letter Quarantine Rule:** Any message failing processing after a configured retry threshold must be isolated into a Dead Letter Queue with diagnostic metadata, never dropped silently.
+2. **Failure classification (derived):** Retry transient failures within the delivery policy and retain an auditable outcome when exhausted. Route invalid input and permanent rejections directly to their review path. Reconcile an unknown payment or print result before repeating it.
 3. **Canonical Event Decoupling:** Internal domain events must remain completely decoupled from external third-party schemas. Translators/Adapters must be isolated at the system edge.

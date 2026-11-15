@@ -27,7 +27,7 @@ Couldwell's chapter **"Design System Model"** presents a simple model built from
 
 ### A. Digital Foundations (Derived Implementation Standards)
 1. **The Spacing Grid (4px/8px Scale):** Use the 4/8 scale for layout spacing and component dimensions. Document exceptions such as 1px borders, 2px focus rings, and optical corrections; avoid arbitrary values.
-2. **Typography Scale:** A defined type ramp (for example, Major Third or Augmented Fourth) tailored to multilingual support, with shared baseline metrics for Arabic (RTL) and Latin (LTR) typography.
+2. **Typography Scale:** A type ramp tailored to multilingual support. Allow script-specific line height and fallback fonts where needed.
 3. **Color Roles & Luminance:** Defined contrast ratios targeting WCAG 2.2 AA as the baseline (2.2 adds Target Size (Minimum), Focus Not Obscured, and Accessible Authentication), and AAA where the product or jurisdiction requires it.
 
 ### B. Interface & Code Audits (التدقيق الدوري للواجهات والكود)
@@ -45,5 +45,5 @@ Couldwell's chapter **"Design System Model"** presents a simple model built from
 
 ## 4. Architectural Rules for This Skill
 1. **The Grid Discipline Rule:** Layout spacing and component dimensions should follow the 4px/8px scale. Document exceptions (borders, focus rings, optical corrections); reject arbitrary values.
-2. **Bilingual Typography Rhythm:** Arabic and Latin typefaces must share identical vertical metrics and optical baselines to prevent layout jitter when switching languages.
+2. **Bilingual typesetting (derived):** Verify optical alignment, wrapping, diacritics and mixed-direction prices or reference numbers in representative Arabic and Latin screens and receipts.
 3. **Automated Audit Gates:** Linters in CI must reject any CSS/Dart code that introduces hardcoded hex color codes or untokenized spacing.

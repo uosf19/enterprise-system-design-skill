@@ -12,15 +12,15 @@ This skill covers offline-first POS, enterprise data boundaries, and cross-platf
 ## Scope & Assumptions
 
 - **Primary domain:** multi-tenant, offline-first restaurant/retail SaaS (POS, KDS, manager mobile, admin web).
-- **Stack examples:** Next.js, Tauri, Flutter, and PostgreSQL are illustrative; the patterns are stack-agnostic.
+- **Stack examples:** Patterns are portable. For Universal ERP, current examples follow .NET/PostgreSQL 18.x, the Angular/TypeScript administration SPA and Flutter/native encrypted SQLite on Windows/Android/iOS under ADR-0001/0005/0006. Earlier React, Next.js and Tauri examples are historical/illustrative, not current project selections.
 - **Project precedence:** Use the project's current architecture, operating decisions, and release gates for implementation. In Universal ERP, start with `docs/project/erp-master-plan.md` and its topic map. Examples in this skill apply only where compatible with those decisions. Record material gaps or conflicts before changing behavior.
 - **Regulatory examples:** ETA, Paymob, Fawry, and similar references are illustrative, not legal or tax advice. Verify current rules for each jurisdiction and document type.
 - **Not a complexity mandate:** simple CRUD or low-scale applications should not adopt DDD aggregates, outbox, or event sourcing without a real consistency, audit, or scale requirement.
 - **Language note:** Arabic glosses in the references support MENA teams; they are explanatory, not required terminology.
-- **Companion skill:** for code-level quality (naming, refactoring, tests) use `code-craftsmanship`. Where the two meet: "crash early" there means abort the faulty operation and quarantine it here (a POS must keep serving other sales); and input validation at the boundary there complements, not replaces, the aggregate invariants here.
+- **Companion skill:** use [code-craftsmanship](https://github.com/uosf19/code-craftsmanship-skill/blob/main/SKILL.md) for naming, refactoring, async/resource lifetime and tests. Its [system-design implementation reference](https://github.com/uosf19/code-craftsmanship-skill/blob/main/references/12-system-design-implementation-and-verification.md) translates these protocols into code/review/failure-test evidence. Where the two meet, abort the faulty operation while preserving durable state and independent eligible work; boundary input validation complements aggregate invariants. Architectural authority remains here and in the project's owning decisions.
 
-### Known Gaps (not covered in depth)
-This skill focuses on POS, offline sync and design systems. The [architecture checklist](checklists/architecture-readiness.md) lists additional ERP concerns, including period close, fiscal numbering, costing, access scope, reporting and effective-dated rules. Apply them when the corresponding workflow is in scope and use the approved accounting or provider policy.
+### Coverage and remaining domain gaps
+Production data/tenant isolation, worker claims, complete sync cursors, capacity and recovery have implementation references below. Accounting policy, period close, fiscal numbering and inventory costing still require the project's approved domain/provider rules; a generic architecture recipe cannot settle them. The [architecture checklist](checklists/architecture-readiness.md) routes those concerns when in scope.
 
 ---
 
@@ -43,9 +43,14 @@ Where a section mixes these, the text labels the derived material.
    - Offline sync and integration → Pillar 2, [offline workflow](references/offline-pos-workflow.md), and [sync checklist](checklists/offline-sync-resilience.md).
    - Shared UI, RTL and touch → Pillars 3–4 and the [design checklist](checklists/design-system-tokens.md). Open the references for the specific patterns under review.
    - Architecture review → [architecture checklist](checklists/architecture-readiness.md), with the sync or design checklist where the scope includes those concerns.
+   - Tenant-safe persistence, concurrent financial writes, queries, caches or migrations → [production data and tenancy](references/16-production-data-and-tenancy.md).
+   - Worker claim/lease recovery, consumer deduplication, snapshot/pull completeness or reconnect → [sync cursors and workers](references/17-sync-cursors-and-workers.md).
+   - SLOs, restore, projections, measured growth or tenant placement → [capacity, recovery and evolution](references/18-capacity-recovery-and-evolution.md).
 2. **Read progressively.** Use this file first; open only the relevant reference(s) and checklist for the task.
 3. **Make decisions explicit.** State the chosen pattern, its trade-offs, and any unresolved risks. Do not silently apply a pattern that the context does not justify.
 4. **Verify before approval.** Run the relevant checklist before approving a design, RFC, or pull request.
+
+For an implementation plan, state prerequisites, owning artifacts, interface/transaction boundaries, failure/concurrency cases, independent acceptance evidence, compatibility/recovery and open decisions for each work package. Separate source facts, derived proposals and measured results. An unexecuted runtime test stays planned. In Universal ERP, use `docs/project/erp-system-design-implementation-plan.md` for this decomposition and the Master Plan for precedence; this skill grants no new execution or live-use authority.
 
 ---
 
@@ -148,8 +153,8 @@ Invariants     Engine          Design System  Language
   - **Semantic Tokens:** Purpose-bound (`color.status.positive: {color.palette.emerald.500}`).
   - **Component Tokens:** Component-scoped (`badge.background.success: {color.status.positive}`).
 - Automated CI pipeline (Style Dictionary or equivalent) compiles tokens into:
-  - Tailwind configuration or CSS Custom Properties for Web & Desktop (Next.js & Tauri).
-  - Flutter theme extensions or constants for Mobile (Flutter).
+  - CSS Custom Properties or the chosen web styling system for the administration SPA.
+  - Flutter theme extensions or constants for native Windows/Android/iOS clients.
 
 ### 2. The 4px/8px Spatial Rhythm & Bidirectional (RTL/LTR) Rules
 - **Grid Rule (skill standard):** Layout spacing and component dimensions should use the 4px/8px scale. Hairline borders (1px), focus rings (2px), and optical corrections are documented exceptions; linters should allow them explicitly.
@@ -219,3 +224,10 @@ Use the [architecture checklist](checklists/architecture-readiness.md) for appli
 - [Architecture Readiness](checklists/architecture-readiness.md)
 - [Offline-First & Sync Resilience](checklists/offline-sync-resilience.md)
 - [Design System & Tokens](checklists/design-system-tokens.md)
+
+### Production Implementation References
+- [16. Data, tenant scope, financial concurrency, caches and migrations](references/16-production-data-and-tenancy.md)
+- [17. Fenced worker claims, consumers, snapshots and commit-complete cursors](references/17-sync-cursors-and-workers.md)
+- [18. Workloads, SLOs, recovery, projections and tenant movement](references/18-capacity-recovery-and-evolution.md)
+
+The production references are derived engineering guidance checked against the [20 November primary-source research](references/primary-sources.md), not additional book chapters. Load only the reference needed for the task.

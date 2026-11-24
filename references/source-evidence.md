@@ -1,5 +1,11 @@
 # Source evidence
 
+## Production research added 20 November 2026
+
+[References 16–18](../SKILL.md#production-implementation-references) are derived production-design procedures researched against [39 primary sources](primary-sources.md#primary-source-register). They cover data/tenancy, workers/cursors, capacity/recovery and evolution. Their examples are neither newly verified book excerpts nor passing application tests. Project-specific scope and work packages remain in the ERP implementation plan (project-local; not distributed with this skill).
+
+The baseline and forward skill application checks are recorded in the validation record (project-local; not distributed with this skill). The existing book-evidence qualifications below are preserved.
+
 Use this index when a review depends on the origin of a technical claim. The study notes combine source material and derived guidance. The locators below are PDF page positions in the reviewed Universal ERP copies. Page positions may differ in other editions.
 
 ## Local materials checked

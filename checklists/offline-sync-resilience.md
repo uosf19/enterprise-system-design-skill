@@ -6,7 +6,8 @@ Use this checklist for offline durability and recovery. The [offline POS workflo
 
 ## 1. Local Edge Node Durability (SQLite / Desktop POS)
 - [ ] **Transaction Atomicity:** Do paid sale, tender, immutable receipt data, print job and sync command commit together before dispatch? Does an injected failure before commit leave no partial database effect and trigger the approved reconciliation path if cash changed hands?
-- [ ] **Encryption at Rest:** Is the local SQLite database encrypted with SQLCipher using a key stored in OS-backed secure storage (e.g., Windows Credential Manager / Apple Keychain)?
+- [ ] **Encryption at Rest:** Is the actual project-selected native encrypted engine/cipher verified in release builds with OS-backed key storage and independent key recovery? Universal ERP ADR-0005 uses SQLite3MultipleCiphers; older SQLCipher examples do not prove its settings, file format or backup compatibility. Fail closed on wrong-library/plaintext fallback.
+- [ ] **Durability and Lifecycle:** Verify effective WAL/FULL, native SQLite/cipher fixes, awaited transactions off the UI isolate, disk-full handling and process/OS interruption separately. Logout/profile/cache changes preserve device-owned committed facts and pending work. Native Android/iOS POS must not require Windows.
 - [ ] **Authority Lease Validity:** Does the client verify the scope and expiry of the signed lease for each action? Test renewal, expiry, and the project rule for actions performed before the device learned of revocation.
 - [ ] **Clock Drift Protection:** Does the local client detect and block material backward clock manipulation? Are monotonic sequence numbers used instead of local wall-clocks for operation ordering?
 
@@ -17,6 +18,7 @@ Use this checklist for offline durability and recovery. The [offline POS workflo
 - [ ] **Device Epoch:** Are `local_sequence` and uniqueness scoped to device and epoch? Before starting a new epoch, reconcile pending and previously applied operations by stable business references. Does retention cover the supported outage, backup recovery and late arrivals?
 - [ ] **Ordering:** Does the server request recovery of missing sequence entries and distinguish them from recorded business rejections whose dependents need review?
 - [ ] **Cursor-Based Pull:** Does the client pull cloud changes using an opaque monotonic cursor, committing the batch to SQLite before acknowledging the cursor?
+- [ ] **Complete Stream:** Does the cursor avoid commit-order holes from sequences/timestamps? Are immutable snapshot pages, head boundary, scope/schema binding, atomic activation, tombstones and history-expiry recovery defined? See [stream design](../references/17-sync-cursors-and-workers.md#commit-complete-cursors).
 - [ ] **Replay Protection:** After enforcing caller scope, does an identical retry return the recorded outcome? Test lost response after commit and simultaneous retries using real persistence.
 
 ---
@@ -36,3 +38,5 @@ Use this checklist for offline durability and recovery. The [offline POS workflo
 - [ ] **Lease Lifecycle:** Are authority leases time-bound, revocable, and auditable, with defined behavior on expiry?
 - [ ] **Upgrade and Restore:** Test a real backup with pending commands, an older supported client and upload before an incompatible update. Verify that a rewound print queue cannot automatically print an uncertain original again.
 - [ ] **Operator State:** Can the POS show local persistence, pending cloud acknowledgement and print review independently, with actionable reasons and references?
+- [ ] **Fair Reconnect:** Are request bytes, batch count, tenant/device/global concurrency and dependency age bounded? Can healthy tenants progress during a reconnect storm? Count durable outcomes, applied effects and unresolved review separately.
+- [ ] **Worker Claims:** If multiple consumers/restarts are possible, verify lease generations on every state change, lost-lease behavior, duplicate deliveries, consumer inbox atomicity and uncertain external effects. A claim lock alone cannot fence a provider request already in flight.

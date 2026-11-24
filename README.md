@@ -2,6 +2,10 @@
 
 A playbook for offline-first restaurant and retail POS, enterprise data boundaries, and shared design systems.
 
+For code implementation and review, pair this with [code-craftsmanship](https://github.com/uosf19/code-craftsmanship-skill/blob/main/SKILL.md) and its [system-design verification reference](https://github.com/uosf19/code-craftsmanship-skill/blob/main/references/12-system-design-implementation-and-verification.md). The two skills share protocol/evidence links without duplicating the project's operating rules. Current ERP stack examples follow ADR-0006's Angular administration alongside .NET/PostgreSQL and native Flutter.
+
+**Maintained source updated 24 November 2026.** Production implementation references now cover tenant-safe data, financial concurrency, fenced workers, complete snapshot/cursor sync, caches, capacity, recovery and tenant evolution. See the [research](references/primary-sources.md), ERP work packages (project-local; not distributed with this skill) and validation record (project-local; not distributed with this skill). This source folder is usable by direct `SKILL.md` reference; no discoverable installation, hooks or global configuration is changed by this update.
+
 The study notes draw on 15 book references and related material. The [source evidence index](references/source-evidence.md) records the material checked, including excerpts and summaries, and distinguishes derived implementation guidance.
 
 > **Scope note:** the primary domain is multi-tenant, offline-first restaurant/retail SaaS (POS, KDS, manager mobile, admin web). The invariants are adaptable to other enterprise domains. Regulatory references are illustrative, not legal or tax advice.
@@ -119,6 +123,9 @@ Install the complete `enterprise-system-design` folder from the chosen release u
 
 - [`SKILL.md`](SKILL.md) — scope, workflow, four pillars, and checklist routing.
 - [Offline POS workflow](references/offline-pos-workflow.md) — transaction boundaries and failure scenarios.
+- [Production data and tenancy](references/16-production-data-and-tenancy.md) — scoped persistence, financial concurrency, queries, cache correctness and migrations.
+- [Sync cursors and workers](references/17-sync-cursors-and-workers.md) — stale-owner recovery, delivery, snapshot boundaries and reconnect.
+- [Capacity, recovery and evolution](references/18-capacity-recovery-and-evolution.md) — useful-work measurements, SLO/recovery boundaries, projections and tenant moves.
 - [`checklists/architecture-readiness.md`](checklists/architecture-readiness.md) — domain, security, observability, integration, testing, performance, recovery gates, and ERP core review prompts.
 - [`checklists/offline-sync-resilience.md`](checklists/offline-sync-resilience.md) — edge durability, sync protocol, conflicts, schema migration, and observability.
 - [`checklists/design-system-tokens.md`](checklists/design-system-tokens.md) — tokens, RTL/LTR, touch ergonomics, accessibility, theming, and lifecycle.
